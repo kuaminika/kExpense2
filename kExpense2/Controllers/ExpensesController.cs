@@ -1,4 +1,5 @@
 ﻿using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,9 +28,19 @@ namespace kExpense2.Controllers
         [HttpGet]
         public List<IKExpense> Get()
         {
+            try {
             List<IKExpense> result =  toolBox.service.GetAll();
             return result;
-           
+            }
+            catch(Exception ex)
+            {
+                List<IKExpense> result = new List<IKExpense>();
+                var error = new ErrorModels.ErrorExpense { BriefDescription = "failed to return", Reason = ex.Message };
+                result.Add(error);
+                return result;
+            }
+
+
         }
     }
 }
