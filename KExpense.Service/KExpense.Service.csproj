@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\kContainer\kContainer.csproj" />
+    <ProjectReference Include="..\KExpense.Model\KExpense.Model.csproj" />
+    <ProjectReference Include="..\KExpense.Repository\KExpense.Repository.csproj" />
+  </ItemGroup>
+
+</Project>
