@@ -66,6 +66,9 @@ namespace KExpense.Repository
                     case (KSP_ParamType.Str):
                         cmd.Parameters[p.Name].DbType = System.Data.DbType.String;
                         break;
+                    case (KSP_ParamType.Decimal):
+                        cmd.Parameters[p.Name].DbType = System.Data.DbType.Decimal;
+                        break;
                 }
             });
 
@@ -99,7 +102,7 @@ namespace KExpense.Repository
                 throw ex;
             }
         }
-
+   
         public override void ExecuteWriteTransaction(string query, IKModelMapper mapper)
         {
             try

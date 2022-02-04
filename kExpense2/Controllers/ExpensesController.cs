@@ -28,19 +28,45 @@ namespace kExpense2.Controllers
         [HttpGet]
         public List<IKExpense> Get()
         {
-            try {
-            List<IKExpense> result =  toolBox.service.GetAll();
-            return result;
+            try
+            {
+                List<IKExpense> result =  toolBox.service.GetAll();
+                return result;
             }
             catch(Exception ex)
             {
                 List<IKExpense> result = new List<IKExpense>();
-                var error = new ErrorModels.ErrorExpense { BriefDescription = "failed to return", Reason = ex.Message };
+                var error = new ErrorModels.ErrorExpense { SpentOnName = "failed to return", BriefDescription = ex.Message };
                 result.Add(error);
                 return result;
             }
-
-
         }
+        [HttpPost]        
+        public IKExpense WhatISent(IKExpense newExpense)
+        {
+            try
+            {
+                return newExpense;
+            }
+            catch (Exception ex)
+            {
+                var error = new ErrorModels.ErrorExpense { SpentOnName = "failed to return", BriefDescription = ex.Message };
+                return error;
+            }
+        }
+
+        /*  [HttpPost]
+          public IKExpense AddExpense(IKExpense newExpense)
+          {
+              try
+              {
+                  toolBox.service.add
+              }
+              catch (Exception ex)
+              {
+                  var error = new ErrorModels.ErrorExpense { BriefDescription = "failed to return", Reason = ex.Message };
+                  return error;
+              }
+          }*/
     }
 }

@@ -11,7 +11,9 @@ namespace kExpense2.ErrorModels
         public int Id { get; set; } = 0;
         public DateTime ExpenseDate { get; set; } = DateTime.Now;
         public string BriefDescription { get; set; } = string.Empty;
-        public string Reason { get; set; } = string.Empty;
+        public string SpentOnName { get; set; } = string.Empty; 
+        public string MerchantName { get; set; } = string.Empty;
         public decimal Cost { get; set; } = 0;
+        public int SpendingOrgId { get; set; } = 0;
     }
 }

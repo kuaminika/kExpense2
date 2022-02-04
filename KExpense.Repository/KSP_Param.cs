@@ -5,7 +5,7 @@ using System.Text;
 namespace KExpense.Repository
 {
     public enum KSP_ParamDirection {  NoDirection,In,Out }
-    public enum KSP_ParamType { Int,Bool,Str}
+    public enum KSP_ParamType { Int,Bool,Str,Decimal}
     public class KSP_Param
     {
         public KSP_Param()

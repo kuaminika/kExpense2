@@ -2,6 +2,8 @@
 {
     public class kSericeConfig : IKServiceConfig
     {
-        public string connectionString { get => "server=localhost;user id=kExpense;persistsecurityinfo=True;database=kExpense; password=kExpense1000"; }
+        public string connectionString { get; set; }
+
+        public int orgId { get; set; }
     }
 }

@@ -11,32 +11,13 @@ namespace KExpense.Repository
     public class KExpenseRepository:IKExpenseRepository
     {
         private readonly  AKDBAbstraction dbAbstraction;
-       
-        public KExpenseRepository(AKDBAbstraction db)
+        public int OrgId { get; set; } = 0;
+        public KExpenseRepository(int orgId,AKDBAbstraction db)
         {
+            this.OrgId = orgId;
             this.dbAbstraction = db;
         }
 
-        // MySql.Data.MySqlClient.
-
-
-        /*
-         public static DateTime? ToDate(this string dateTimeStr, params string[] dateFmt)
-	{
-		// example: var dt = "2011-03-21 13:26".ToDate(new string[]{"yyyy-MM-dd HH:mm", 
-		//                                                  "M/d/yyyy h:mm:ss tt"});
-		const DateTimeStyles style = DateTimeStyles.AllowWhiteSpaces;
-		if (dateFmt == null)
-		{
-			var dateInfo = System.Threading.Thread.CurrentThread.CurrentCulture.DateTimeFormat;
-			dateFmt=dateInfo.GetAllDateTimePatterns();
-		}
-		var result = (DateTime.TryParseExact(dateTimeStr, dateFmt,
-	 		CultureInfo.InvariantCulture, style, out var dt)) ? dt : null as DateTime?;
-		return result;
-	}
-         
-         */
         private DateTime strToDate(string str)
         {
 
@@ -54,24 +35,28 @@ namespace KExpense.Repository
         }
 
 
-        public List<IKExpense> GetAllKExpenses()
+        public List<IKExpense> GetAllKExpenses(int org_id )
         {
+
+            //todo - test when org_id is something else
             List<IKExpense> result = new List<IKExpense>();
-               string allExpenses = @" SELECT * 
+               string allExpenses =  @" SELECT * 
              FROM kExpense e 
              inner join  kForeignPartyOrgn o on e.kThirdPartyOrgn_id = o.id
              inner join  kOrgnProduct p on p.id = e.kOrgnProduct_id ";
+
+            allExpenses += org_id == 0 ? string.Empty : string.Format(" where korgn_id={0}", OrgId);
             dbAbstraction.ExecuteReadTransaction(allExpenses, new AllMapper((kdt)=> {
-
-
                 while (kdt.Read())
                 {
                     var p = new ExpenseModel();
                     p.BriefDescription = kdt.GetString("reason");
                     p.ExpenseDate = strToDate(kdt.GetString("transactionDate"));
                     p.Cost = kdt.GetDecimal("amount");
+                    p.MerchantName = kdt.GetString("name_denormed");
                     p.Id = kdt.GetInt("id");
-                    p.Reason = kdt.GetString("name");
+                    p.SpendingOrgId = kdt.GetInt("korgn_id");
+                    p.SpentOnName = kdt.GetString("name");
                     result.Add(p);
                  }
             }));
@@ -79,8 +64,61 @@ namespace KExpense.Repository
 
 
         }
+
+        public List<IKExpense> GetAllKExpenses()
+        {
+            return this.GetAllKExpenses(0);
+        }
         public IKExpense RecordExpense(IKExpense newExpense)
         {
+            //todo: need to thing of scenario when reason not found
+            int product_id =0;
+            try
+            {
+                string productSearchQuery = string.Format("SELECT id from kOrgnProduct p where p.name='{0}'", newExpense.SpentOnName);
+                dbAbstraction.ExecuteReadTransaction(productSearchQuery, new AllMapper(kdataReader =>
+                {
+                    if (!kdataReader.YieldedResults) return;
+                    product_id = kdataReader.GetInt("id");
+                }));
+            }
+            catch(Exception ex) { product_id = 0; }// todo: need to log  error 
+            int merchant_id = 1 ;// todo: the default merchant id should be a variable
+            try
+            {
+                //todo: need to thing of scenario when merchant not found
+                string merchantSearchQuery = string.Format("SELECT id from kForeignPartyOrgn p where p.name_denormed='{0}'", newExpense.MerchantName);
+                dbAbstraction.ExecuteReadTransaction(merchantSearchQuery, new AllMapper(kdataReader =>
+                {
+                    if (!kdataReader.YieldedResults) return;
+                    merchant_id = kdataReader.GetInt("id");
+                }));
+            }
+            catch { merchant_id = 1; }// todo: need to log  error 
+            string query = @"CALL `houseofm_kExpense`.`record_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
+
+            query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
+
+            dbAbstraction.ExecuteReadTransaction(query, new AllMapper(kdataReader =>
+            {
+                // kdataReader.
+            }));
+            /*string procedureName = "record_expense";
+            
+            List<KSP_Param> parameters = new List<KSP_Param>();
+            parameters.Add(new KSP_Param { Name = "for_produc_id", Type = KSP_ParamType.Int, Value = product_id.ToString() });
+            parameters.Add(new KSP_Param { Name = "expense_year", Type = KSP_ParamType.Int, Value = newExpense.ExpenseDate.Year.ToString() });
+            parameters.Add(new KSP_Param { Name = "expense_month", Type = KSP_ParamType.Int, Value = newExpense.ExpenseDate.Month.ToString() });
+            parameters.Add(new KSP_Param { Name = "expense_day", Type = KSP_ParamType.Int, Value = newExpense.ExpenseDate.Day.ToString() });
+            parameters.Add(new KSP_Param { Name = "cost", Type = KSP_ParamType.Decimal, Value = newExpense.Cost.ToString() });
+            parameters.Add(new KSP_Param { Name = "reason", Type = KSP_ParamType.Str, Value = newExpense.BriefDescription });
+            parameters.Add(new KSP_Param { Name = "merchant_id", Type = KSP_ParamType.Str, Value = merchant_id.ToString() });
+            parameters.Add(new KSP_Param { Name = "spending_org_id", Type = KSP_ParamType.Int, Value = newExpense.SpendingOrgId.ToString() });
+
+            dbAbstraction.ExecuteReadSPTranasaction(procedureName, parameters,new AllMapper(kdataReader => {
+               // kdataReader.
+            }));
+            */
             // MySqlConnection
             return new ExpenseModel()
           { Id =0 , BriefDescription ="not implemented yet"};
@@ -95,16 +133,16 @@ namespace KExpense.Repository
             parameters.Add(new KSP_Param { Name = "expense_year",  Type = KSP_ParamType.Int, Value = year.ToString() });
             parameters.Add(new KSP_Param { Name = "expense_month", Type = KSP_ParamType.Int, Value = month.ToString() });
             var mapper = new AllMapper((kdt) => {
-
-
                 while (kdt.Read())
                 {
                     var p = new ExpenseModel();
                     p.BriefDescription = kdt.GetString("reason");
                     p.ExpenseDate = strToDate(kdt.GetString("transactionDate"));
                     p.Cost = kdt.GetDecimal("amount");
+                    p.MerchantName = kdt.GetString("name_denormed");
                     p.Id = kdt.GetInt("id");
-                    p.Reason = kdt.GetString("name");
+                    p.SpendingOrgId = kdt.GetInt("korgn_id");
+                    p.SpentOnName = kdt.GetString("name");
                     result.Add(p);
                 }
             });
@@ -112,5 +150,7 @@ namespace KExpense.Repository
 
             return result;
         }
+
+       
     }
 }
