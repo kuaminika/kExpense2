@@ -42,10 +42,11 @@ namespace kExpense2.Controllers
             }
         }
         [HttpPost]        
-        public IKExpense WhatISent(IKExpense newExpense)
+        public IKExpense Post(ExpenseModel newExpense)
         {
             try
             {
+                toolBox.service.AddExpense(newExpense);
                 return newExpense;
             }
             catch (Exception ex)
@@ -55,12 +56,12 @@ namespace kExpense2.Controllers
             }
         }
 
-        /*  [HttpPost]
+         /* [HttpPost]
           public IKExpense AddExpense(IKExpense newExpense)
           {
               try
               {
-                  toolBox.service.add
+                toolBox.service.AddExpense(newExpense);
               }
               catch (Exception ex)
               {

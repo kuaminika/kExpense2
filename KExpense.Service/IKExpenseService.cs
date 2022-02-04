@@ -9,5 +9,6 @@ namespace KExpense.Service
     {
         List<IKExpense> GetAll();
         List<IKExpense> GetAllForMonth(int year, int month,int associatedProductId);
+        void AddExpense(IKExpense newExpense);
     }
 }
