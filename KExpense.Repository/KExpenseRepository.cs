@@ -95,33 +95,17 @@ namespace KExpense.Repository
                 }));
             }
             catch { merchant_id = 1; }// todo: need to log  error 
-            string query = @"CALL `houseofm_kExpense`.`record_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
+           
+            string query = @"CALL `record_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
 
             query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
-
+            int last_id = 0;
             dbAbstraction.ExecuteReadTransaction(query, new AllMapper(kdataReader =>
             {
-                // kdataReader.
+                last_id = kdataReader.GetInt("id");
             }));
-            /*string procedureName = "record_expense";
-            
-            List<KSP_Param> parameters = new List<KSP_Param>();
-            parameters.Add(new KSP_Param { Name = "for_produc_id", Type = KSP_ParamType.Int, Value = product_id.ToString() });
-            parameters.Add(new KSP_Param { Name = "expense_year", Type = KSP_ParamType.Int, Value = newExpense.ExpenseDate.Year.ToString() });
-            parameters.Add(new KSP_Param { Name = "expense_month", Type = KSP_ParamType.Int, Value = newExpense.ExpenseDate.Month.ToString() });
-            parameters.Add(new KSP_Param { Name = "expense_day", Type = KSP_ParamType.Int, Value = newExpense.ExpenseDate.Day.ToString() });
-            parameters.Add(new KSP_Param { Name = "cost", Type = KSP_ParamType.Decimal, Value = newExpense.Cost.ToString() });
-            parameters.Add(new KSP_Param { Name = "reason", Type = KSP_ParamType.Str, Value = newExpense.BriefDescription });
-            parameters.Add(new KSP_Param { Name = "merchant_id", Type = KSP_ParamType.Str, Value = merchant_id.ToString() });
-            parameters.Add(new KSP_Param { Name = "spending_org_id", Type = KSP_ParamType.Int, Value = newExpense.SpendingOrgId.ToString() });
-
-            dbAbstraction.ExecuteReadSPTranasaction(procedureName, parameters,new AllMapper(kdataReader => {
-               // kdataReader.
-            }));
-            */
-            // MySqlConnection
-            return new ExpenseModel()
-          { Id =0 , BriefDescription ="not implemented yet"};
+            newExpense.Id = last_id;
+            return newExpense;
 
         }
 

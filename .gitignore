@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+#custom config files
+KExpense.Service.Test/kExpenseConfig.json

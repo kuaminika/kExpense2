@@ -16,7 +16,7 @@ namespace KExpense.Service.Test
 
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false).Build();
 
-            string connString = config["connectionString"].ToString();//"server=localhost;user id=kExpense;persistsecurityinfo=True;database=kExpense; password=kExpense1000";
+            string connString = config["connectionString"].ToString();
              orgId = 2;
             db = new KMysql_KDBAbstraction(connString);
         }
