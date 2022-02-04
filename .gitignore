@@ -340,4 +340,4 @@ ASALocalRun/
 healthchecksdb
 
 #custom config files
-KExpense.Service.Test/kExpenseConfig.json
+*/kExpenseConfig.json
