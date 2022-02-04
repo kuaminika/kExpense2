@@ -17,10 +17,21 @@ namespace kExpense2.kConfigs
         }
         public string connectionString { get { return Get("connectionString"); } }
 
+        public int orgId { get => GetInt("orgId"); }
+
         public string Get(string key)
         {
           string result =   _config[key];
             return result?? string.Empty;
+        }
+
+        public int GetInt(string key)
+        {
+            string result = _config[key];
+            int r;
+            bool itsGood = int.TryParse(result, out r);
+
+            return itsGood ? r : 0;
         }
     }
 }

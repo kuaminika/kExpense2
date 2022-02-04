@@ -13,6 +13,8 @@ namespace KExpense.Repository
             
         }
 
+        public bool YieldedResults { get => this.dt.HasRows; }
+
         public decimal GetDecimal(string column)
         {
             decimal rslt = dt.GetDecimal(column);
