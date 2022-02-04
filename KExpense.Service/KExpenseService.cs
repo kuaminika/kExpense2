@@ -14,6 +14,10 @@ namespace KExpense.Service
             this.kexpenseRepository = kexpenseRepository;
         }
 
+        public void AddExpense(IKExpense newExpense)
+        {
+            this.kexpenseRepository.RecordExpense(newExpense);
+        }
 
         public List<IKExpense> GetAll()
         {
