@@ -46,8 +46,8 @@ namespace kExpense2.Controllers
         {
             try
             {
-                toolBox.service.AddExpense(newExpense);
-                return newExpense;
+                IKExpense result =  toolBox.service.RecordExpense(newExpense);
+                return result;
             }
             catch (Exception ex)
             {
@@ -56,18 +56,5 @@ namespace kExpense2.Controllers
             }
         }
 
-         /* [HttpPost]
-          public IKExpense AddExpense(IKExpense newExpense)
-          {
-              try
-              {
-                toolBox.service.AddExpense(newExpense);
-              }
-              catch (Exception ex)
-              {
-                  var error = new ErrorModels.ErrorExpense { BriefDescription = "failed to return", Reason = ex.Message };
-                  return error;
-              }
-          }*/
     }
 }
