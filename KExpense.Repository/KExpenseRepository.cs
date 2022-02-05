@@ -95,16 +95,27 @@ namespace KExpense.Repository
                 }));
             }
             catch { merchant_id = 1; }// todo: need to log  error 
-           
-            string query = @"CALL `record_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
 
-            query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
-            int last_id = 0;
-            dbAbstraction.ExecuteReadTransaction(query, new AllMapper(kdataReader =>
-            {
-                last_id = kdataReader.GetInt("id");
-            }));
-            newExpense.Id = last_id;
+            string insertQuery = @"insert into kExpense(reason, amount,transactionDate,kOrgn_id,kThirdPartyOrgn_id,kOrgnProduct_id)
+                                    value ( '{0}',  {1},'{2}',{3},{4},{5});";
+            long last_id = 0;
+            insertQuery = string.Format(insertQuery, newExpense.BriefDescription, newExpense.Cost, newExpense.ExpenseDate.ToString("yyyyMMdd"), newExpense.SpendingOrgId, merchant_id, product_id);
+            last_id =  dbAbstraction.ExecuteWriteTransaction(insertQuery);
+            
+
+           /*
+            *
+                //for some reason calling SP is not working so using manual insert instead
+                string query = @"CALL `record_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
+
+                query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
+                int last_id = 0;
+                dbAbstraction.ExecuteReadTransaction(query, new AllMapper(kdataReader =>
+                {
+                    last_id = kdataReader.GetInt("id");
+                }));
+           */
+            newExpense.Id = (int)last_id;
             return newExpense;
 
         }
