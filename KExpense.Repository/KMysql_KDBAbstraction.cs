@@ -109,18 +109,22 @@ namespace KExpense.Repository
             }
         }
    
-        public override void ExecuteWriteTransaction(string query, IKModelMapper mapper)
+        public override long ExecuteWriteTransaction(string query)
         {
             try
             {
+                long result = 0;
                 MySqlConnection conn = new MySqlConnection(this.ConnectionString);
                 conn.Open();
-
+                
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
-
+                result = cmd.LastInsertedId;
                 conn.Close();
+
+
+                return result;
             }
             catch (Exception ex)
             {

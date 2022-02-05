@@ -13,7 +13,7 @@ namespace KExpense.Repository.interfaces
 
         public string ConnectionString { get; }
 
-        public abstract void ExecuteWriteTransaction(string query, IKModelMapper mapper);
+        public abstract long ExecuteWriteTransaction(string query);
         public abstract void ExecuteReadTransaction(string query, IKModelMapper mapper);
 
         public abstract void ExecuteReadSPTranasaction(string name, List<KSP_Param> lists, IKModelMapper mapper);
