@@ -36,7 +36,7 @@ namespace kExpense2.Controllers
             catch(Exception ex)
             {
                 List<IKExpense> result = new List<IKExpense>();
-                var error = new ErrorModels.ErrorExpense { SpentOnName = "failed to return", BriefDescription = ex.Message };
+                var error = new ErrorModels.ErrorExpense { SpentOnName = "failed to return"+ this._config.connectionString, BriefDescription = ex.Message };
                 result.Add(error);
                 return result;
             }
