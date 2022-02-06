@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,24 @@ namespace kExpense2
         {
             Configuration = configuration;
         }
-
+        private string coorsPolicyName = "kCoorsPolicy";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {            
+            services.AddCors(options =>
+             {
+                 options.AddPolicy(coorsPolicyName,
+                 builder =>
+                 {
+                     //allowedOringins came from the kExpenseConfig.json
+                     string[] allowedOrigins = Configuration["allowedOringins"].Split(',');
+                    builder.WithOrigins(allowedOrigins)
+                     .AllowAnyHeader()                      
+                     .AllowAnyMethod();
+                 });
+             });
             services.AddControllers();
         }
 
@@ -35,11 +48,11 @@ namespace kExpense2
             {
                 app.UseDeveloperExceptionPage();
             }*/
+           
             app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
-
+            app.UseCors(coorsPolicyName);
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
