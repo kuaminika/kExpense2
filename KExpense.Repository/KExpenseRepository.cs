@@ -35,10 +35,10 @@ namespace KExpense.Repository
         }
 
 
-        public List<IKExpense> GetAllKExpenses(int org_id )
+        public List<IKExpense> GetAllKExpenses(int org_id = 0, string sortby = "id")
         {
 
-            //todo - test when org_id is something else
+            //TODO - test when org_id is something else
             List<IKExpense> result = new List<IKExpense>();
                string allExpenses =  @" SELECT * 
              FROM kExpense e 
@@ -46,6 +46,7 @@ namespace KExpense.Repository
              inner join  kOrgnProduct p on p.id = e.kOrgnProduct_id ";
 
             allExpenses += org_id == 0 ? string.Empty : string.Format(" where korgn_id={0}", OrgId);
+            allExpenses += "order by e." + sortby + " desc";
             dbAbstraction.ExecuteReadTransaction(allExpenses, new AllMapper((kdt)=> {
                 while (kdt.Read())
                 {
@@ -65,10 +66,6 @@ namespace KExpense.Repository
 
         }
 
-        public List<IKExpense> GetAllKExpenses()
-        {
-            return this.GetAllKExpenses(0);
-        }
         public IKExpense RecordExpense(IKExpense newExpense)
         {
             //todo: need to thing of scenario when reason not found
