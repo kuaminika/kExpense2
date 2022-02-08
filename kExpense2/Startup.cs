@@ -48,7 +48,7 @@ namespace kExpense2
             {
                 app.UseDeveloperExceptionPage();
             }*/
-           
+           // TODO need to change json config file if env.IsDev
             app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseCors(coorsPolicyName);
