@@ -11,6 +11,7 @@ namespace KExpense.Repository.interfaces
      
         IKExpense RecordExpense(IKExpense newExpense);
         List<IKExpense> GetAllKExpensesForMonth(int year, int month, int productId);
-        void DeleteExense(IKExpense newExpense);
+        bool DeleteExense(IKExpense victim);
+        bool DeleteExenseById(IKExpense victim);
     }
 }
