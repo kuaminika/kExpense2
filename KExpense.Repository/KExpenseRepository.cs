@@ -66,37 +66,55 @@ namespace KExpense.Repository
 
         }
 
-        public IKExpense RecordExpense(IKExpense newExpense)
+
+
+         DataExpenseModel validateProductAndMerchant(IKExpense expense)
         {
-            //todo: need to thing of scenario when reason not found
-            int product_id =0;
+            DataExpenseModel result = new DataExpenseModel();
+            result.copy(expense);
+
+            //TODO: need to thing of scenario when reason not found
             try
             {
-                string productSearchQuery = string.Format("SELECT id from kOrgnProduct p where p.name='{0}'", newExpense.SpentOnName);
+                string productSearchQuery = string.Format("SELECT id from kOrgnProduct p where p.name='{0}'", result.SpentOnName);
                 dbAbstraction.ExecuteReadTransaction(productSearchQuery, new AllMapper(kdataReader =>
                 {
                     if (!kdataReader.YieldedResults) return;
-                    product_id = kdataReader.GetInt("id");
+                    result.ForProductId = kdataReader.GetInt("id");
                 }));
             }
-            catch(Exception ex) { product_id = 0; }// todo: need to log  error 
-            int merchant_id = 1 ;// todo: the default merchant id should be a variable
+            catch (Exception ex) {
+                result.ForProductId = 0; 
+            }// todo: need to log  error 
+
+            result.MerchantId = 1;
+            //TODO: the default merchant id should be a variable
             try
             {
                 //todo: need to thing of scenario when merchant not found
-                string merchantSearchQuery = string.Format("SELECT id from kForeignPartyOrgn p where p.name_denormed='{0}'", newExpense.MerchantName);
+                string merchantSearchQuery = string.Format("SELECT id from kForeignPartyOrgn p where p.name_denormed='{0}'", result.MerchantName);
                 dbAbstraction.ExecuteReadTransaction(merchantSearchQuery, new AllMapper(kdataReader =>
                 {
                     if (!kdataReader.YieldedResults) return;
-                    merchant_id = kdataReader.GetInt("id");
+                    result.MerchantId = kdataReader.GetInt("id");
                 }));
             }
-            catch { merchant_id = 1; }// todo: need to log  error 
+            catch {
+                result.MerchantId = 1; 
+            }// todo: need to log  error 
+
+            return result;
+        }
+
+        public IKExpense RecordExpense(IKExpense newExpense)
+        {
+            DataExpenseModel newExpenseData = validateProductAndMerchant(newExpense);
+        
 
             string insertQuery = @"insert into kExpense(reason, amount,transactionDate,kOrgn_id,kThirdPartyOrgn_id,kOrgnProduct_id)
                                     value ( '{0}',  {1},'{2}',{3},{4},{5});";
             long last_id = 0;
-            insertQuery = string.Format(insertQuery, newExpense.BriefDescription, newExpense.Cost, newExpense.ExpenseDate.ToString("yyyyMMdd"), newExpense.SpendingOrgId, merchant_id, product_id);
+            insertQuery = string.Format(insertQuery, newExpenseData.BriefDescription, newExpenseData.Cost, newExpenseData.ExpenseDate.ToString("yyyyMMdd"), newExpenseData.SpendingOrgId, newExpenseData.MerchantId, newExpenseData.ForProductId);
             last_id =  dbAbstraction.ExecuteWriteTransaction(insertQuery);
             
 
@@ -143,6 +161,43 @@ namespace KExpense.Repository
             return result;
         }
 
-       
+        public bool DeleteExense(IKExpense victim)
+        {
+            DataExpenseModel victimData = validateProductAndMerchant(victim);
+            /*string query = @"CALL `delete_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
+
+            query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
+            int last_id = 0;*/
+
+
+            string query = @" delete from kExpense k 
+		    where k.id = {0}
+		      and k.reason = '{1}' 
+		      and k.amount = {2}
+		      and k.transactionDate = '{3}'
+		      and k.korgn_id = {4}
+		      and k.kThirdPartyOrgn_id = {5}
+		      and k.kOrgnProduct_id = {6};";
+            query = string.Format(query, victimData.Id, victimData.BriefDescription, victimData.Cost, victimData.ExpenseDate.ToString("yyyyMMdd"), victimData.SpendingOrgId, victimData.MerchantId, victimData.ForProductId);
+            long oneIfGood = dbAbstraction.ExecuteWriteTransaction(query);
+            bool result =    oneIfGood == 1;
+            return result;
+        }
+
+        public bool DeleteExenseById(IKExpense victim)
+        {
+            DataExpenseModel victimData = validateProductAndMerchant(victim);
+            /*string query = @"CALL `delete_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
+
+            query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
+            int last_id = 0;*/
+
+
+            string query = $@" delete from kExpense k  where k.id = {victimData.Id};";
+            long oneIfGood = dbAbstraction.ExecuteWriteTransaction(query);
+            bool result = oneIfGood == 1;
+            return result;
+        }
+
     }
 }
