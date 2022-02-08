@@ -16,7 +16,7 @@ namespace KExpense.Service.Test
 
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false).Build();
 
-            string connString = config["connectionString"].ToString();
+            string connString = config["connectionString_dev"].ToString();
              orgId = 2;
             db = new KMysql_KDBAbstraction(connString);
         }
@@ -36,6 +36,60 @@ namespace KExpense.Service.Test
             var r = ker.GetAllKExpenses();
             Assert.IsTrue(r.Count > 0);
         }
+
+        [Test]
+        public void TestDeletingExpense()
+        {
+            IKExpenseRepository ker = new KExpenseRepository(orgId, db); 
+            var r = ker.GetAllKExpenses();
+            int countBefore = r.Count;
+            //adding first
+            Model.IKExpense newExpense = new Model.ExpenseModel { BriefDescription = "this is a test:" + System.DateTime.Now.ToString(), ExpenseDate = System.DateTime.Now, Cost = 100, SpentOnName = "test", SpendingOrgId = 1 };
+            newExpense = ker.RecordExpense(newExpense);
+            r = ker.GetAllKExpenses();
+
+
+            int countAfter = r.Count;
+           
+            Assert.IsTrue(countAfter > countBefore, $"Failed to add countAfter:{countAfter}, countBefore:{countBefore}");
+
+
+
+            ker.DeleteExense(newExpense);
+
+            r = ker.GetAllKExpenses();
+            countAfter = r.Count;
+            Assert.IsTrue(countAfter == countBefore, $"Failed to delete. well quantity is not what it was before countAfter:{countAfter}, countBefore:{countBefore}");
+
+        }
+        [Test]
+        public void TestDeletingExpenseById()
+        {
+            IKExpenseRepository ker = new KExpenseRepository(orgId, db);
+            var r = ker.GetAllKExpenses();
+            int countBefore = r.Count;
+            //adding first
+            Model.IKExpense newExpense = new Model.ExpenseModel { BriefDescription = "this is a test:" + System.DateTime.Now.ToString(), ExpenseDate = System.DateTime.Now, Cost = 100, SpentOnName = "test", SpendingOrgId = 1 };
+            newExpense = ker.RecordExpense(newExpense);
+            r = ker.GetAllKExpenses();
+
+
+            int countAfter = r.Count;
+
+            Assert.IsTrue(countAfter > countBefore, $"Failed to add countAfter:{countAfter}, countBefore:{countBefore}");
+
+
+
+            ker.DeleteExenseById(newExpense);
+
+            r = ker.GetAllKExpenses();
+            countAfter = r.Count;
+            Assert.IsTrue(countAfter == countBefore, $"Failed to delete. well quantity is not what it was before countAfter:{countAfter}, countBefore:{countBefore}");
+
+    
+        }
+
+
         [Test]
         public void TestAddingExpense()
         {
@@ -52,7 +106,7 @@ namespace KExpense.Service.Test
 
             int countAfter = r.Count;
 
-            Assert.IsTrue(countAfter > countBefore);
+            Assert.IsTrue(countAfter > countBefore, $"Failed to add countAfter:{countAfter}, countBefore:{countBefore}");
 
         }
 
