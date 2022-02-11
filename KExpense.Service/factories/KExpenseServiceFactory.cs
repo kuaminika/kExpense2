@@ -41,7 +41,7 @@ namespace KExpense.Service.factories
 
             Repository.KMysql_KDBAbstraction db = new Repository.KMysql_KDBAbstraction(configs.connectionString);
             Repository.interfaces.IKExpenseRepository repo = new Repository.KExpenseRepository(configs.orgId,db);
-            IKExpenseService esult = new KExpenseService(repo);
+            IKExpenseService esult = new KExpenseService(new ToolBox { ExpenseReo = repo });
 
 
             return esult;
