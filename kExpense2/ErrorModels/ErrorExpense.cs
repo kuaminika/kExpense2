@@ -1,4 +1,5 @@
 ﻿using KExpense.Model;
+using kExpense2.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace kExpense2.ErrorModels
 {
-    public class ErrorExpense : IKExpense
+    public class ErrorExpense : IKExpense, IKResultModel
     {
         public int Id { get; set; } = 0;
         public DateTime ExpenseDate { get; set; } = DateTime.Now;
@@ -15,5 +16,7 @@ namespace kExpense2.ErrorModels
         public string MerchantName { get; set; } = string.Empty;
         public decimal Cost { get; set; } = 0;
         public int SpendingOrgId { get; set; } = 0;
+        
+        public string Message { get { return this.BriefDescription; } }
     }
 }

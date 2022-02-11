@@ -10,5 +10,7 @@ namespace KExpense.Service
         List<IKExpense> GetAll();
         List<IKExpense> GetAllForMonth(int year, int month,int associatedProductId);
         IKExpense RecordExpense(IKExpense newExpense);
+        int DeleteExpense(ExpenseModel newExpense);
+        int DeleteExpenseWithId(int victimId);
     }
 }

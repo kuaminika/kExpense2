@@ -2,16 +2,33 @@
 using KExpense.Model;
 using System;
 using System.Collections.Generic;
+using KExpense.Repository;
+using KExpense.Service.factories;
 
 namespace KExpense.Service
 {
     public class  KExpenseService: IKExpenseService
     {
         IKExpenseRepository kexpenseRepository;
+        private ToolBox toolBox;
 
-        public KExpenseService(IKExpenseRepository kexpenseRepository)
+        public KExpenseService(ToolBox toolBox)
         {
-            this.kexpenseRepository = kexpenseRepository;
+            this.toolBox = toolBox;
+            this.kexpenseRepository = toolBox.ExpenseReo;
+        }
+
+        public int DeleteExpense(ExpenseModel newExpense)
+        {
+            int result =  this.kexpenseRepository.DeleteExense(newExpense);
+            return result;
+        }
+
+        public int DeleteExpenseWithId(int victimId)
+        {
+            Models.ProxyExpenseModel victim = new Models.ProxyExpenseModel(victimId,this.toolBox);
+            int result = this.kexpenseRepository.DeleteExenseById(victim);
+            return result;
         }
 
         public List<IKExpense> GetAll()
@@ -31,5 +48,6 @@ namespace KExpense.Service
             IKExpense savedRecord = this.kexpenseRepository.RecordExpense(newExpense);
             return savedRecord;
         }
+
     }
 }

@@ -1,20 +1,18 @@
 ﻿using System;
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using KExpense.Model;
 using kExpense2.kConfigs;
-using Microsoft.AspNetCore.Http;
+using kExpense2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+
 
 namespace kExpense2.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
     public class ExpensesController : ControllerBase
-    {
+    {//TODO: need to figure out how to return 500s
         private KxtensionsConfig _config;
         private KExpenseToolBox toolBox;
         public ExpensesController(IConfiguration Configuration)
@@ -41,6 +39,7 @@ namespace kExpense2.Controllers
                 return result;
             }
         }
+
         [HttpPost]        
         public IKExpense Post(ExpenseModel newExpense)
         {
@@ -52,6 +51,32 @@ namespace kExpense2.Controllers
             catch (Exception ex)
             {
                 var error = new ErrorModels.ErrorExpense { SpentOnName = "failed to return", BriefDescription = ex.Message };
+                return error;
+            }
+        }
+
+
+        [HttpGet]
+        [Route("Delete/{victimId}")]
+        public IKResultModel Delete(int victimId)
+        {
+            try
+            {
+                //TODO : need to do situation where victimId = 0
+                //TODO : need to do situation where victimID is non exisitent. perhaps confirm that 0 recordsdeleted
+               int affectedRpwCount =  toolBox.service.DeleteExpenseWithId(victimId);
+
+
+                var result =  new SuccessModel($"{affectedRpwCount} affected by change");
+                //  HttpResponseMessage re = Request.CreateResponse<SuccessModel>(System.Net.HttpStatusCode.OK, result);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var error = new ErrorModels.ErrorExpense { SpentOnName = "failed to return", BriefDescription = ex.Message };
+
+
+              // HttpResponseMessage re = Request.CreateResponse<ErrorExpense>(System.Net.HttpStatusCode.InternalServerError, error);
                 return error;
             }
         }
