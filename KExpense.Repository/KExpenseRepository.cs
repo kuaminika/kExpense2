@@ -68,6 +68,8 @@ namespace KExpense.Repository
 
 
 
+
+
          DataExpenseModel validateProductAndMerchant(IKExpense expense)
         {
             DataExpenseModel result = new DataExpenseModel();
@@ -115,7 +117,7 @@ namespace KExpense.Repository
                                     value ( '{0}',  {1},'{2}',{3},{4},{5});";
             long last_id = 0;
             insertQuery = string.Format(insertQuery, newExpenseData.BriefDescription, newExpenseData.Cost, newExpenseData.ExpenseDate.ToString("yyyyMMdd"), newExpenseData.SpendingOrgId, newExpenseData.MerchantId, newExpenseData.ForProductId);
-            last_id =  dbAbstraction.ExecuteWriteTransaction(insertQuery);
+            last_id =  dbAbstraction.ExecuteWriteTransaction(insertQuery).LastInsertedId;
             
 
            /*
@@ -161,7 +163,12 @@ namespace KExpense.Repository
             return result;
         }
 
-        public bool DeleteExense(IKExpense victim)
+        /// <summary>
+        /// returns amount of Rows affected
+        /// </summary>
+        /// <param name="victim"></param>
+        /// <returns></returns>
+        public int DeleteExense(IKExpense victim)
         {
             DataExpenseModel victimData = validateProductAndMerchant(victim);
             /*string query = @"CALL `delete_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
@@ -169,7 +176,7 @@ namespace KExpense.Repository
             query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
             int last_id = 0;*/
 
-
+            //TODO : note the k variable does not seem to be available in all versions of mysql ... perhaps it'll be good to specify in a readme.md to choose the right verison of mysql
             string query = @" delete from kExpense k 
 		    where k.id = {0}
 		      and k.reason = '{1}' 
@@ -179,25 +186,43 @@ namespace KExpense.Repository
 		      and k.kThirdPartyOrgn_id = {5}
 		      and k.kOrgnProduct_id = {6};";
             query = string.Format(query, victimData.Id, victimData.BriefDescription, victimData.Cost, victimData.ExpenseDate.ToString("yyyyMMdd"), victimData.SpendingOrgId, victimData.MerchantId, victimData.ForProductId);
-            long oneIfGood = dbAbstraction.ExecuteWriteTransaction(query);
-            bool result =    oneIfGood == 1;
-            return result;
+            var result =  dbAbstraction.ExecuteWriteTransaction(query);
+            return result.AffectedRowCount;
         }
 
-        public bool DeleteExenseById(IKExpense victim)
+        public int DeleteExenseById(IKExpense victim)
         {
-            DataExpenseModel victimData = validateProductAndMerchant(victim);
-            /*string query = @"CALL `delete_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
-
-            query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
-            int last_id = 0;*/
-
-
-            string query = $@" delete from kExpense k  where k.id = {victimData.Id};";
-            long oneIfGood = dbAbstraction.ExecuteWriteTransaction(query);
-            bool result = oneIfGood == 1;
-            return result;
+            string query = $@" delete from kExpense where id = {victim.Id};";
+            var  oneIfGood = dbAbstraction.ExecuteWriteTransaction(query);
+            return  oneIfGood.AffectedRowCount;
         }
 
+        public IKExpense GetById(int id)
+        {
+            //TODO - test when org_id is something else
+            List<IKExpense> result = new List<IKExpense>();
+            string allExpenses = $@" SELECT * 
+             FROM kExpense e 
+             inner join  kForeignPartyOrgn o on e.kThirdPartyOrgn_id = o.id
+             inner join  kOrgnProduct p on p.id = e.kOrgnProduct_id 
+             where e.id = {id}";
+
+          
+            dbAbstraction.ExecuteReadTransaction(allExpenses, new AllMapper((kdt) => {
+                while (kdt.Read())
+                {
+                    var p = new ExpenseModel();
+                    p.BriefDescription = kdt.GetString("reason");
+                    p.ExpenseDate = strToDate(kdt.GetString("transactionDate"));
+                    p.Cost = kdt.GetDecimal("amount");
+                    p.MerchantName = kdt.GetString("name_denormed");
+                    p.Id = kdt.GetInt("id");
+                    p.SpendingOrgId = kdt.GetInt("korgn_id");
+                    p.SpentOnName = kdt.GetString("name");
+                    result.Add(p);
+                }
+            }));
+            return result[0];
+        }
     }
 }
