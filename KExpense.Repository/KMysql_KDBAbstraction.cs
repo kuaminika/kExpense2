@@ -109,18 +109,19 @@ namespace KExpense.Repository
             }
         }
    
-        public override long ExecuteWriteTransaction(string query)
+        public override KWriteResult ExecuteWriteTransaction(string query)
         {
             try
             {
-                long result = 0;
+                KWriteResult result = new KWriteResult();
                 MySqlConnection conn = new MySqlConnection(this.ConnectionString);
                 conn.Open();
                 
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.ExecuteNonQuery();
-                result = cmd.LastInsertedId;
+                result.AffectedRowCount =  cmd.ExecuteNonQuery();
+                result.LastInsertedId = cmd.LastInsertedId;
+          
                 conn.Close();
 
 
