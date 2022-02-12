@@ -163,29 +163,7 @@ namespace KExpense.Repository
             return result;
         }
 
-        public bool DeleteExense(IKExpense victim)
-        {
-            DataExpenseModel victimData = validateProductAndMerchant(victim);
-            /*string query = @"CALL `delete_expense`({0},{1},{2},{3},{4},'{5}',{6},{7}); ";
-
-            query = string.Format(query, product_id, newExpense.ExpenseDate.Year, newExpense.ExpenseDate.Month, newExpense.ExpenseDate.Day, newExpense.Cost, newExpense.BriefDescription, merchant_id, newExpense.SpendingOrgId);
-            int last_id = 0;*/
-
-
-            string query = @" delete from kExpense k 
-		    where k.id = {0}
-		      and k.reason = '{1}' 
-		      and k.amount = {2}
-		      and k.transactionDate = '{3}'
-		      and k.korgn_id = {4}
-		      and k.kThirdPartyOrgn_id = {5}
-		      and k.kOrgnProduct_id = {6};";
-            query = string.Format(query, victimData.Id, victimData.BriefDescription, victimData.Cost, victimData.ExpenseDate.ToString("yyyyMMdd"), victimData.SpendingOrgId, victimData.MerchantId, victimData.ForProductId);
-            long oneIfGood = dbAbstraction.ExecuteWriteTransaction(query);
-            bool result =    oneIfGood == 1;
-            return result;
-        }
-
+       
         /// <summary>
         /// returns amount of Rows affected
         /// </summary>
