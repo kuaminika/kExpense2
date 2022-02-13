@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 namespace kExpense2.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class ExpensesController : ControllerBase
     {//TODO: need to figure out how to return 500s
         private KxtensionsConfig _config;
@@ -41,7 +42,7 @@ namespace kExpense2.Controllers
         }
 
         [HttpPost]        
-        public IKExpense Post(ExpenseModel newExpense)
+        public IKExpense Post( ExpenseModel newExpense)
         {
             try
             {
@@ -54,6 +55,22 @@ namespace kExpense2.Controllers
                 return error;
             }
         }
+
+        [HttpPost]
+        [Route("whatISent")]
+        public IKExpense whatISent(ExpenseModel newExpense)
+        {
+            try
+            {
+                return newExpense;
+            }
+            catch (Exception ex)
+            {
+                var error = new ErrorModels.ErrorExpense { SpentOnName = "failed to return", BriefDescription = ex.Message };
+                return error;
+            }
+        }
+
 
 
         [HttpGet]
