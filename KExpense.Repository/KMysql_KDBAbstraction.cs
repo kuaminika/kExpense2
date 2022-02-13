@@ -23,11 +23,8 @@ namespace KExpense.Repository
 
                 using (MySqlDataReader dt = cmd.ExecuteReader())
                 {
-                    if (dt.Read())
-                    {
-                        IKDataReader mysqlDatareader = new KMySqlDataReader(dt);
-                        mapper.map(mysqlDatareader);
-                    }
+                    IKDataReader mysqlDatareader = new KMySqlDataReader(dt);
+                    mapper.map(mysqlDatareader);                   
                 }
 
                 conn.Close();
