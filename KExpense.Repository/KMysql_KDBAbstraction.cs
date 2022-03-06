@@ -14,7 +14,7 @@ namespace KExpense.Repository
         public override void ExecuteReadTransaction(string query, IKModelMapper mapper)
         {
             try
-            {//"server=localhost;user id=kExpense;persistsecurityinfo=True;database=kExpense; password=kExpense1000");
+            {
                 MySqlConnection conn = new MySqlConnection(this.ConnectionString);
                 conn.Open();
 
