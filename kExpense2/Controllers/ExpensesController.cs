@@ -72,6 +72,23 @@ namespace kExpense2.Controllers
         }
 
 
+        [HttpPost]
+        [Route("UpdateExpense")]
+        public IKExpense UpdateExpense(ExpenseModel expenseToUpdate)
+        {
+            try 
+            {
+                IKExpense updatedRecord = toolBox.service.UpdateExpense(expenseToUpdate);
+                return updatedRecord;
+            }
+            catch(Exception ex)
+            {
+
+                var error = new ErrorModels.ErrorExpense { SpentOnName = "failed to return", BriefDescription = ex.Message };
+                return error;
+            }
+        }
+
 
         [HttpGet]
         [Route("Delete/{victimId}")]

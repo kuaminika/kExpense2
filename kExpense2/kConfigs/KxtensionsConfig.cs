@@ -16,7 +16,7 @@ namespace kExpense2.kConfigs
             _config = innerConfig;
         }
         //todo: need to find a way to make this work without hardocding string
-        public string connectionString { get { return string.IsNullOrEmpty(Get("connectionString"))? "server=mi3-ts9.a2hosting.com;user id=houseofm_kExpense;persistsecurityinfo=True;database=houseofm_kExpense;password=kExpense1000": Get("connectionString"); } }
+        public string connectionString { get { return Get("connectionString"); } }
 
         public int orgId { get => GetInt("orgId"); }
 

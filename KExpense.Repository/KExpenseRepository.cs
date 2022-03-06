@@ -69,8 +69,12 @@ namespace KExpense.Repository
 
 
 
-
-         DataExpenseModel validateProductAndMerchant(IKExpense expense)
+        /// <summary>
+        /// this method confirms that the merchant and product exists. I then returns a new DataExpenseModel with proper Ids 
+        /// </summary>
+        /// <param name="expense"></param>
+        /// <returns></returns>
+        DataExpenseModel validateProductAndMerchant(IKExpense expense)
         {
             DataExpenseModel result = new DataExpenseModel();
             result.copy(expense);
@@ -224,6 +228,19 @@ namespace KExpense.Repository
                 }
             }));
             return result[0];
+        }
+
+        public int UpdateExpense(IKExpense victim)
+        {
+            DataExpenseModel dataExp = validateProductAndMerchant(victim);
+            var writeResult = dbAbstraction.ExecuteWriteTransaction($@"UPDATE kExpense 
+                                                        SET kThirdPartyOrgn_id={dataExp.MerchantId},
+                                                            amount={dataExp.Cost} ,
+                                                            kOrgnProduct_id={dataExp.ForProductId},
+                                                            reason ='{dataExp.BriefDescription}'
+                                                      WHERE id={dataExp.Id}");
+
+            return writeResult.AffectedRowCount;
         }
     }
 }

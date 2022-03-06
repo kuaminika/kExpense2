@@ -14,5 +14,6 @@ namespace KExpense.Repository.interfaces
         int DeleteExense(IKExpense victim);
         int DeleteExenseById(IKExpense victim);
         IKExpense GetById(int id);
+        int UpdateExpense(IKExpense first);
     }
 }
