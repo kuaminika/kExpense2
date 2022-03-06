@@ -80,8 +80,8 @@ namespace KExpense.Repository
             {
                 string productSearchQuery = string.Format("SELECT id from kOrgnProduct p where p.name='{0}'", result.SpentOnName);
                 dbAbstraction.ExecuteReadTransaction(productSearchQuery, new AllMapper(kdataReader =>
-                {
-                    if (!kdataReader.YieldedResults) return;
+                {                    
+                    if (!kdataReader.Read()||!kdataReader.YieldedResults) return;
                     result.ForProductId = kdataReader.GetInt("id");
                 }));
             }
@@ -97,7 +97,7 @@ namespace KExpense.Repository
                 string merchantSearchQuery = string.Format("SELECT id from kForeignPartyOrgn p where p.name_denormed='{0}'", result.MerchantName);
                 dbAbstraction.ExecuteReadTransaction(merchantSearchQuery, new AllMapper(kdataReader =>
                 {
-                    if (!kdataReader.YieldedResults) return;
+                    if (!kdataReader.Read() || !kdataReader.YieldedResults) return;
                     result.MerchantId = kdataReader.GetInt("id");
                 }));
             }
