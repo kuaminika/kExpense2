@@ -49,5 +49,21 @@ namespace KExpense.Service
             return savedRecord;
         }
 
+        public IKExpense UpdateExpense(ExpenseModel expenseToUpdate)
+        {
+            try
+            {
+                bool updateWentWell = this.kexpenseRepository.UpdateExpense(expenseToUpdate) == 1;
+                if (updateWentWell) return expenseToUpdate;
+
+                throw new Exception("Failed to update");//TODO: shouldn't be harcoding error message
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            
+            }
+
+        }
     }
 }

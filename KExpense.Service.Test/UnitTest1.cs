@@ -1,3 +1,4 @@
+using KExpense.Model;
 using KExpense.Repository;
 using KExpense.Repository.interfaces;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ namespace KExpense.Service.Test
 {
     //todo: test KExpenseRepository
     //todo: test OrgRepository
+
     public class Tests
     {
         AKDBAbstraction db;
@@ -16,7 +18,7 @@ namespace KExpense.Service.Test
 
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false).Build();
 
-            string connString = config["connectionString_dev"].ToString();
+            string connString = config["connectionString_test"].ToString();
              orgId = 2;
             db = new KMysql_KDBAbstraction(connString);
         }
@@ -62,6 +64,26 @@ namespace KExpense.Service.Test
             Assert.IsTrue(countAfter == countBefore, $"Failed to delete. well quantity is not what it was before countAfter:{countAfter}, countBefore:{countBefore}");
 
         }
+
+        [Test]
+        public void TestUpdateFirstExpense()
+        {
+            IKExpenseRepository ker = new KExpenseRepository(orgId, db);
+            var r = ker.GetAllKExpenses();
+            IKExpense first = r[0];
+            IKExpense initial = new ExpenseModel { MerchantName = first.MerchantName,Cost= first.Cost};
+            first.MerchantName = "ANW";
+            first.Cost = 1000;
+            int rowCOunt = ker.UpdateExpense(first);
+
+            r = ker.GetAllKExpenses();
+            first = r[0];
+            Assert.AreEqual(rowCOunt, 1);
+            Assert.AreNotEqual(first.MerchantName, initial.MerchantName);
+            Assert.AreNotEqual(first.Cost, initial.Cost);
+        }
+
+
         [Test]
         public void TestDeletingExpenseById()
         {

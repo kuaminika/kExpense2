@@ -12,5 +12,6 @@ namespace KExpense.Service
         IKExpense RecordExpense(IKExpense newExpense);
         int DeleteExpense(ExpenseModel newExpense);
         int DeleteExpenseWithId(int victimId);
+        IKExpense UpdateExpense(ExpenseModel expenseToUpdate);
     }
 }
