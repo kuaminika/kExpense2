@@ -33,7 +33,7 @@ namespace kExpense2
                  {
                      //allowedOringins came from the kExpenseConfig.json
                      string[] allowedOrigins = Configuration["allowedOringins"].Split(',');
-                    builder.WithOrigins(allowedOrigins)
+                     builder.WithOrigins(allowedOrigins)
                      .AllowAnyHeader()                      
                      .AllowAnyMethod();
                  });
