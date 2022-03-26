@@ -32,7 +32,11 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/expenses",
       "publishAllPorts": true,
       "sslPort": 6001,
-      "useSSL": true
+      "useSSL": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "theBest": "sous minis"
     }
   }
 }

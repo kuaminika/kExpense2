@@ -20,10 +20,10 @@ namespace kExpense2
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                     webBuilder.UseStartup<Startup>();
-                }).ConfigureAppConfiguration((hostingContext,config)=> {
+                    webBuilder.UseStartup<Startup>();
+                });/*.ConfigureAppConfiguration((hostingContext,config)=> {
 
                     config.AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false);
-                });
+                });*/
     }
 }
