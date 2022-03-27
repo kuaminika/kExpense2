@@ -136,7 +136,7 @@ namespace KExpense.Service.Test
         [Test]
         public void TestingGettingExpensesForMonth()
         {
-
+            //TODO make sure that this test work 
             IKExpenseRepository ker = new KExpenseRepository(orgId,db);
             var r = ker.GetAllKExpensesForMonth(2021, 8, 2);
             Assert.IsTrue(r.Count > 0);
