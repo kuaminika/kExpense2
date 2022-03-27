@@ -1,5 +1,8 @@
-﻿using KExpense.Service;
+﻿using KDBAbstractions.Repository.interfaces;
+using KExpense.Service;
 using KExpense.Service.factories;
+using MerchantService;
+using MerchantService.Models;
 
 namespace kExpense2.kConfigs
 {
@@ -23,6 +26,20 @@ namespace kExpense2.kConfigs
             }
         }
 
+        public MerchantService.IMerchantService merchantService
+        {
+            get
+            {
+                //TODO create serviceFactory
+                MerchantRepositoryCreator repoCreator = MerchantRepositoryCreator.Instanciate;
+                var args = new MerchantRepositoryArgs();
+                args.RepositoryType =_config.Get("repositoryType");
+                args.ConnectionString = _config.connectionString;
 
+                IKRepository<IMerchantModel>  kRepo = repoCreator.Create(args);
+                IMerchantService face = new ServiceFacade(kRepo);
+                return face;
+            }
+        }
     }
 }
