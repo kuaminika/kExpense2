@@ -24,7 +24,7 @@ namespace kExpense.Service.Income.Test
         {
             List<RecordedIncomeModel> list = service.FindIncomes();
             int beforeAmount = list.Count;
-            IIncomeModel newIncome = new NewIncomeModel { IncomeDate = DateTime.Now, BriefDescription = $"they gave it {beforeAmount}", Amount = 10*beforeAmount, InvestmentName = "Utwagwan", OrgId = 2 };
+            IIncomeModel newIncome = new NewIncomeModel { IncomeDate = DateTime.Now, BriefDescription = $"they gave it {beforeAmount}", Amount = 10*beforeAmount, ProductName = "Utwagwan", OrgId = 2 };
    
             newIncome.Source = new RecordedSource { Id = 12 };
             service.InsertIncome(newIncome);

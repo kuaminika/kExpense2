@@ -29,8 +29,15 @@ namespace kExpense.Service.Income
                                     , i.reason               `BriefDescription`
                                     , i.amount               `Amount`
                                     , i.transactionDate      `RawDate` 
+                                    , p.id                   `SourceId`
+                                    , p.email_denormed       `SourceEmail`
+                                    , p.name_denormed        `SourceName`
+                                    , ifnull(pr.`name`,'')   `InvestmentName`
+                                    , i.kOrgnid              `OrgId`
+                                    , ifnull(pr.id,0)	     `ProductId`
                               FROM `kIncome` i 
                         INNER JOIN `kForeignIncomePartyOrgn` p on i.kThirdPartyOrgnid = p.id
+                         LEFT JOIN `kOrgnProduct` pr on pr.id = i.kProductId
                              WHERE ( i.transactionDate = {date} or (i.transactionDate <>{date} and {date}={defaultDate}))
                                and ( i.id = {queryObj.Id}       or (i.id<>{queryObj.Id} and {queryObj.Id} = 0))
                                and ( i.reason = '{queryObj.BriefDescription}'       or (i.reason<>'{queryObj.BriefDescription}' and '{queryObj.BriefDescription}' = ''))
@@ -45,8 +52,8 @@ namespace kExpense.Service.Income
         {
             RecordedIncomeModel queryObj = getRecordedModel(m);
 
-            string result = $@"insert into `kIncome` (`reason`,`amount`,`transactionDate`,`kThirdPartyOrgnid`,`kOrgnid`) 
-                                        values('{queryObj.BriefDescription}',{queryObj.Amount},{queryObj.RawDate},{queryObj.SourceId},{queryObj.OrgId})";
+            string result = $@"insert into `kIncome` (`reason`,`amount`,`transactionDate`,`kThirdPartyOrgnid`,`kOrgnid`,`kProductId`) 
+                                        values('{queryObj.BriefDescription}',{queryObj.Amount},{queryObj.RawDate},{queryObj.SourceId},{queryObj.OrgId},{queryObj.ProductId})";
             return result;
         }
 
@@ -62,7 +69,7 @@ namespace kExpense.Service.Income
             result.Id = parameters.ParameterNames.AsList().Contains("Id")? parameters.Get<int>("Id"):0;
             result.OrgId = parameters.Get<int>("OrgId");
             result.SourceId = parameters.ParameterNames.AsList().Contains("SourceId")? parameters.Get<int>("SourceId"):0;
-          
+            result.ProductId = parameters.ParameterNames.AsList().Contains("ProductId")?parameters.Get<int>("ProductId"):0;
             return result;
 
         }

@@ -31,7 +31,7 @@ namespace kExpense.Service.Income.Test
         [Test]
         public void TestInsertingIncome()
         {
-            IIncomeModel newIncome = new NewIncomeModel { IncomeDate = DateTime.Now, BriefDescription = "they gave it", Amount = 10, InvestmentName = "Utwagwan", OrgId = 2 };
+            IIncomeModel newIncome = new NewIncomeModel { IncomeDate = DateTime.Now, BriefDescription = "they gave it", Amount = 10, ProductName = "Utwagwan", OrgId = 2 };
             var sourceList = incomeSourceRepo.FindSourcesLikeThis();
             List<RecordedIncomeModel> list = repository.FindIncomesLikeThis();
             int buffer = 10;
@@ -39,12 +39,12 @@ namespace kExpense.Service.Income.Test
 
             if (sourceList.Count == 0)
             {
-                IIncomeSourceModel incomeSourceModel = new NewIncomeSource { Name = $"Sandra{beforeAmount + buffer}", Address = "123 rue okap, No Okap Haiti", Email = $"no email for sandra{beforeAmount + buffer}", Phone = "514-123-1234" };
+                RecordedSource incomeSourceModel = new RecordedSource { Name = $"Sandra{beforeAmount + buffer}", Address = "123 rue okap, No Okap Haiti", Email = $"no email for sandra{beforeAmount + buffer}", Phone = "514-123-1234" };
 
-                newIncome.Source = incomeSourceRepo.InsertIncomeSource(incomeSourceModel);
+                newIncome.Source =incomeSourceRepo.InsertIncomeSource(incomeSourceModel);
             }
             else
-                newIncome.Source = sourceList[0];
+                newIncome.Source = sourceList[0] as RecordedSource;
 
 
 

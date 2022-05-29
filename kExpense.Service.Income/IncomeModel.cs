@@ -11,9 +11,21 @@ namespace kExpense.Service.Income
         public DateTime IncomeDate { get => strToDate(RawDate); set { RawDate = value.ToString("yyyyMMdd"); } }
         public string BriefDescription { get; set; }
         public decimal Amount { get; set; }
-        public IIncomeSourceModel Source { get; set; }
+        public RecordedSource Source { get=>_source??ghostSource(); set=>_source=value; }
+        RecordedSource _source;
+        private RecordedSource ghostSource()//TODO : need to make sure this ghost source works right
+        {
+            var result = new RecordedSource{ Id = SourceId, Name = SourceName, Email = SourceEmail, Phone="ghost", Address="ghost"};
+            return result;
+        }
+
         public int SourceId { get; internal set; }
         public string RawDate { get; internal set; }
+        public string ProductName { get=>this.InvestmentName; set=>InvestmentName=value;  }
+        public string SourceEmail {get;set;}
+        public string SourceName {get;set;}
+        public string InvestmentName{get;set;}
+        public int ProductId{get;set;}
 
         private DateTime strToDate(string str)
         {

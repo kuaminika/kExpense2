@@ -11,7 +11,7 @@ namespace kExpense.Service.Income
         List<IIncomeSourceModel> FindIncomeSources(IIncomeSourceModel source);
         List<RecordedIncomeModel> FindIncomes();
         RecordedIncomeModel InsertIncome(IIncomeModel newIncome);
-        void DeleteIncomeById(RecordedIncomeModel victim);
+        int DeleteIncomeById(RecordedIncomeModel victim);
     }
 
 
@@ -45,9 +45,10 @@ namespace kExpense.Service.Income
 
         }
 
-        public void DeleteIncomeById(RecordedIncomeModel victim)
+        public int DeleteIncomeById(RecordedIncomeModel victim)
         {
-            incomeRepository.DeleteIncomeById(victim);
+          int affectedRows =   incomeRepository.DeleteIncomeById(victim);
+            return affectedRows;
         }
 
         public List<RecordedIncomeModel> FindIncomes()

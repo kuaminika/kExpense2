@@ -11,6 +11,7 @@ namespace kExpense.Service.Income
         DateTime IncomeDate { get; set; }
         string BriefDescription { get; set; } 
         decimal Amount { get; set; }
-        IIncomeSourceModel Source { get; set; }
+        string ProductName {get;set;}
+        RecordedSource Source { get; set; }
     }
 }

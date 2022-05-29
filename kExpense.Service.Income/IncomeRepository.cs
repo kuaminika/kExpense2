@@ -10,7 +10,7 @@ namespace kExpense.Service.Income
     {
         RecordedIncomeModel InsertIncome(IIncomeModel incomeModel);
         List<RecordedIncomeModel> FindIncomesLikeThis(IIncomeModel q = null);
-        void DeleteIncomeById(RecordedIncomeModel victim);
+        int DeleteIncomeById(RecordedIncomeModel victim);
     }
 
 
@@ -33,7 +33,7 @@ namespace kExpense.Service.Income
 
             DynamicParameters parameters = findDynamicParams(queryObj);
             string query = incomeQueries.FindIncomesLikeThis(parameters);
-
+        Console.Out.WriteLine(query);
            List<RecordedIncomeModel> recordeds = dataGateway.ExecuteReadManyResult<RecordedIncomeModel>(query);
 
             return recordeds;
@@ -54,14 +54,35 @@ namespace kExpense.Service.Income
 
         private IIncomeModel getBlankModel()
         {
-            IIncomeModel result = new NewIncomeModel { BriefDescription = "", IncomeDate = DateTime.Now, Amount = 0, Source = new NewIncomeSource(), InvestmentName = "", OrgId = orgId };
+            IIncomeModel result = new NewIncomeModel { BriefDescription = "", IncomeDate = DateTime.MinValue, Amount = 0, Source = new RecordedSource(), ProductName = "", OrgId = orgId };
             return result;
+        }
+
+
+        int getProductId(IIncomeModel incomeModel)
+        {
+             //TODO: need to thing of scenario when reason not found
+            try
+            {
+                string productSearchQuery = string.Format("SELECT id from kOrgnProduct p where p.name='{0}'", incomeModel.ProductName);
+                int rslt =0;
+                dataGateway.ExecuteScalar(productSearchQuery,new KDBAbstractions.AllMapper(reader=>{
+                    if (!reader.Read()||!reader.YieldedResults) return ;
+                    rslt = reader.GetInt("id");
+                }));
+                return rslt;
+            }
+            catch (Exception ex) {
+               Console.Out.WriteLine(ex.Message);
+               return 0;
+            }// todo: need to log  error 
         }
 
         public RecordedIncomeModel InsertIncome(IIncomeModel incomeModel)
         {
             RecordedIncomeModel result = RecordedIncomeModel.Copy(incomeModel);
             result.SourceId = (incomeModel.Source as RecordedSource).Id;
+            result.ProductId = getProductId(incomeModel);
             DynamicParameters parameters = findDynamicParams(result);     
             string query = incomeQueries.InsertQuery(parameters);
             var outcome = dataGateway.ExecuteInsert(query);          
@@ -69,12 +90,14 @@ namespace kExpense.Service.Income
             return result;
         }
 
-        public void DeleteIncomeById(RecordedIncomeModel victim)
+        public int DeleteIncomeById(RecordedIncomeModel victim)
         {
             DynamicParameters parameters = findDynamicParams(victim);
-           string query = incomeQueries.DeleteIncome<DynamicParameters>(parameters);
+           string query = incomeQueries.DeleteIncome(parameters);
 
-                dataGateway.Execute(query);
+           var outcome =      dataGateway.Execute(query);
+
+            return outcome.AffectedRowCount;
         }
     }
 }
