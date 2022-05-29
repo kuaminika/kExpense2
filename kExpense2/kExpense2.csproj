@@ -13,9 +13,11 @@
   <ItemGroup>
     <PackageReference Include="MerchantService" Version="1.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\kExpense.Service.Income\kExpense.Service.Income.csproj" />
     <ProjectReference Include="..\KExpense.Service\KExpense.Service.csproj" />
   </ItemGroup>
 

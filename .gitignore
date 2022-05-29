@@ -343,3 +343,6 @@ healthchecksdb
 */kExpenseConfig.json
 */appsettings.Development.json
 */appsettings.Production.json
+.vscode/tasks.json
+.gitignore
+.vscode/launch.json

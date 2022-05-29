@@ -18,12 +18,17 @@ namespace kExpense2
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging((context,logging)=>
+                {
+                    logging.ClearProviders();
+                    logging.AddConfiguration(context.Configuration.GetSection("Logging"));// this says that you're configuring using the section inside appsetting.json
+                    logging.AddDebug();// this says that you're adding a Debug logger
+                    logging.AddConsole();// this says that you're adding a Consolelogger
+
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });/*.ConfigureAppConfiguration((hostingContext,config)=> {
-
-                    config.AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false);
-                });*/
+                });
     }
 }
