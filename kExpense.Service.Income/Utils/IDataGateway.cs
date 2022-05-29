@@ -1,4 +1,5 @@
 ﻿using KDBAbstractions.Repository.interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace kExpense.Service.Income.Utils
@@ -10,7 +11,7 @@ namespace kExpense.Service.Income.Utils
         KWriteResult ExecuteInsert(string query);
         List<T> ExecuteReadManyResult<T>(string query);
 
-
+       void ExecuteScalar(string query,IKModelMapper mapper);
 
     }
 

@@ -76,6 +76,19 @@ namespace kExpense.Service.Income.Utils
                 throw ex;
             }
         }
+
+        public void ExecuteScalar(string query,IKModelMapper mapper)
+        {
+           try{
+
+               dbAbstraction.ExecuteReadTransaction(query,mapper);
+
+           }
+           catch(Exception ex)
+           {
+               throw ex;
+           }
+        }
     }
 
 }
