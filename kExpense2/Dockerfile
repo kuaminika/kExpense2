@@ -7,6 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
+COPY "kExpense2/nuget.config" .
 COPY ["kExpense2/kExpense2.csproj", "kExpense2/"]
 RUN dotnet restore "kExpense2/kExpense2.csproj"
 COPY . .

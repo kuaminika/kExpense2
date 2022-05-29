@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>0de91a6e-445a-4faf-800e-6085043e38e1</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="nuget.config" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MerchantService" Version="1.0.1" />
