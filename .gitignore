@@ -341,3 +341,5 @@ healthchecksdb
 
 #custom config files
 */kExpenseConfig.json
+*/appsettings.Development.json
+*/appsettings.Production.json
