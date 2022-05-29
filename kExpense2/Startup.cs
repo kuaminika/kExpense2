@@ -43,12 +43,12 @@ namespace kExpense2
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {/*
+        { 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }*/
-           // TODO need to change json config file if env.IsDev
+            } 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor});
             app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();
             app.UseCors(coorsPolicyName);
