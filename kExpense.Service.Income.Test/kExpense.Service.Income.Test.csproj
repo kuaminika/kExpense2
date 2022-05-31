@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="kExpenseConfig.test.json" />
+    <None Remove="kExpenseConfig.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,16 +19,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-    <PackageReference Include="nunit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KExpense.Repository\KExpense.Repository.csproj" />
-    <ProjectReference Include="..\KExpense.Service\KExpense.Service.csproj" />
-    <ProjectReference Include="..\kExpense2\kExpense2.csproj" />
+    <ProjectReference Include="..\kExpense.Service.Income\kExpense.Service.Income.csproj" />
   </ItemGroup>
 
 </Project>
