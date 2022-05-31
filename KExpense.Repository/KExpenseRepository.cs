@@ -182,14 +182,14 @@ namespace KExpense.Repository
             int last_id = 0;*/
 
             //TODO : note the k variable does not seem to be available in all versions of mysql ... perhaps it'll be good to specify in a readme.md to choose the right verison of mysql
-            string query = @" delete from kExpense k 
-		    where k.id = {0}
-		      and k.reason = '{1}' 
-		      and k.amount = {2}
-		      and k.transactionDate = '{3}'
-		      and k.korgn_id = {4}
-		      and k.kThirdPartyOrgn_id = {5}
-		      and k.kOrgnProduct_id = {6};";
+            string query = @" delete from kExpense  
+		    where id = {0}
+		      and reason = '{1}' 
+		      and amount = {2}
+		      and transactionDate = '{3}'
+		      and korgn_id = {4}
+		      and kThirdPartyOrgn_id = {5}
+		      and kOrgnProduct_id = {6};";
             query = string.Format(query, victimData.Id, victimData.BriefDescription, victimData.Cost, victimData.ExpenseDate.ToString("yyyyMMdd"), victimData.SpendingOrgId, victimData.MerchantId, victimData.ForProductId);
             var result =  dbAbstraction.ExecuteWriteTransaction(query);
             return result.AffectedRowCount;

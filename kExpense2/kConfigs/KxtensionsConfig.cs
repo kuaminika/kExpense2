@@ -16,7 +16,7 @@ namespace kExpense2.kConfigs
             _config = innerConfig;
         }
         //todo: need to find a way to make this work without hardocding string
-        public string connectionString { get { return Get("connectionString"); } }
+        public string connectionString { get { return _config.GetConnectionString("default"); } }
 
         public int orgId { get => GetInt("orgId"); }
 
