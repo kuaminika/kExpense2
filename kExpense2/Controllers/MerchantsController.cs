@@ -34,7 +34,7 @@ namespace kExpense2.Controllers
             {
                 List<IMerchantModel> errList = new List<IMerchantModel>();
                 errList.Add(ErrorModels.ErrorMerchantModelCreator.get().CreateFromException(ex));
-                return errList;
+                throw ex;
             }
         }
 

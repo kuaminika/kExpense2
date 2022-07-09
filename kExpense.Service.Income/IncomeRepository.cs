@@ -94,8 +94,9 @@ namespace kExpense.Service.Income
         {
             DynamicParameters parameters = findDynamicParams(victim);
            string query = incomeQueries.DeleteIncome(parameters);
+            Console.Out.WriteLine(query);
 
-           var outcome =      dataGateway.Execute(query);
+            var outcome =      dataGateway.Execute(query);
 
             return outcome.AffectedRowCount;
         }

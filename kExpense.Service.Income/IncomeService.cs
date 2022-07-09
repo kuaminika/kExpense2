@@ -12,6 +12,7 @@ namespace kExpense.Service.Income
         List<RecordedIncomeModel> FindIncomes();
         RecordedIncomeModel InsertIncome(IIncomeModel newIncome);
         int DeleteIncomeById(RecordedIncomeModel victim);
+        RecordedSource AddSource(NewIncomeSource newSource);
     }
 
 
@@ -45,6 +46,16 @@ namespace kExpense.Service.Income
 
         }
 
+        public RecordedSource AddSource(NewIncomeSource newSource)
+        {
+            //TODO needs logging this whole class needs LOgging ... TCHUIP!!!
+
+
+
+            var result =   incomeSourceRepository.InsertIncomeSource(newSource);
+            return result;
+        }
+
         public int DeleteIncomeById(RecordedIncomeModel victim)
         {
           int affectedRows =   incomeRepository.DeleteIncomeById(victim);
@@ -67,10 +78,11 @@ namespace kExpense.Service.Income
         {
            var sourceList = incomeSourceRepository.FindSourcesLikeThis(newIncome.Source);
             if (sourceList.Count == 0)
-            {               
+            {
                 newIncome.Source = incomeSourceRepository.InsertIncomeSource(newIncome.Source);
             }
-
+            else
+                newIncome.Source = sourceList[0] as RecordedSource;
             RecordedIncomeModel  result = incomeRepository.InsertIncome(newIncome);
 
             return result;

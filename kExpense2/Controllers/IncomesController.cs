@@ -6,18 +6,19 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using kExpense.Service.Income.Source;
 
 namespace kExpense2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class IncomesController:ControllerBase
+    public class IncomesController : ControllerBase
     {
-        IIncomeService service; 
+        IIncomeService service;
 
-        public IncomesController(IConfiguration configuration  )
-        {        
-           service =  Igniter.Ignite(configuration); 
+        public IncomesController(IConfiguration configuration)
+        {
+            service = Igniter.Ignite(configuration);
         }
 
 
@@ -26,14 +27,51 @@ namespace kExpense2.Controllers
         {
             try
             {
-                List<RecordedIncomeModel> list = service.FindIncomes(); 
+                List<RecordedIncomeModel> list = service.FindIncomes();
                 return list;
             }
-            catch(Exception ex)
-            { 
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
+
+        [HttpPost]
+        [Route("AddSource")]
+        public RecordedSource AddSource(NewIncomeSource newSource)
+        {
+            try
+            {
+
+                RecordedSource recordedSource = service.AddSource(newSource);
+                return recordedSource;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        [HttpGet]
+        [Route("Sources")]
+        public List<RecordedSource> GetIncomeSources()
+        {
+            try
+            {
+                IIncomeSourceModel blnk = new NewIncomeSource();
+                List<IIncomeSourceModel> list = service.FindIncomeSources(blnk);
+                List<RecordedSource> results = new List<RecordedSource>();
+                list.ForEach(e=>results.Add(e as RecordedSource));
+                return results;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         [HttpPost]
         public RecordedIncomeModel AddIncome(NewIncomeModel newIncome)

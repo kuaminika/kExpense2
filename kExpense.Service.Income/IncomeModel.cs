@@ -24,7 +24,7 @@ namespace kExpense.Service.Income
         public string ProductName { get=>this.InvestmentName; set=>InvestmentName=value;  }
         public string SourceEmail {get;set;}
         public string SourceName {get;set;}
-        public string InvestmentName{get;set;}
+        public string InvestmentName { get; set; } = "None";
         public int ProductId{get;set;}
 
         private DateTime strToDate(string str)

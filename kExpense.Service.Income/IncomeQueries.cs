@@ -14,7 +14,7 @@ namespace kExpense.Service.Income
         {
             DynamicParameters parameters = m as DynamicParameters;
 
-            string result = $@"delete from `kIncome` where id ={parameters.Get<int>("Id")}";
+            string result = $@"update `kIncome` set deletedTimne=NOW() where id = {parameters.Get<int>("Id")}"; //$@"delete from `kIncome` where id ={parameters.Get<int>("Id")}";
 
             return result;
 
@@ -41,7 +41,8 @@ namespace kExpense.Service.Income
                              WHERE ( i.transactionDate = {date} or (i.transactionDate <>{date} and {date}={defaultDate}))
                                and ( i.id = {queryObj.Id}       or (i.id<>{queryObj.Id} and {queryObj.Id} = 0))
                                and ( i.reason = '{queryObj.BriefDescription}'       or (i.reason<>'{queryObj.BriefDescription}' and '{queryObj.BriefDescription}' = ''))
-                                ;";
+                               and ( i.deletedTimne is null)
+                          ORDER BY i.id DESC     ;";
 
 
             return result;           

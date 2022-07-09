@@ -56,8 +56,7 @@ namespace kExpense2
             app.UseHttpsRedirection();
             app.UseCors(coorsPolicyName);
             app.UseRouting();
-            app.UseAuthorization();
-
+            app.UseAuthorization(); 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
