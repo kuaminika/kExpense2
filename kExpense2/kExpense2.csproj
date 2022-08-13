@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\kExpense.Service.Income\kExpense.Service.Income.csproj" />
     <ProjectReference Include="..\KExpense.Service\KExpense.Service.csproj" />
+    <ProjectReference Include="..\kExpense2.service.Usager\kExpense2.service.Usager.csproj" />
     <ProjectReference Include="..\MerchantService\MerchantService.csproj" />
   </ItemGroup>
 
