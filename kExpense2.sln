@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30503.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "kExpense2", "kExpense2\kExpense2.csproj", "{839D583E-3C9D-4A29-AE08-375380E29733}"
 EndProject
@@ -22,6 +22,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MerchantService", "MerchantService\MerchantService.csproj", "{7C97312D-A920-443C-B4EB-A9A9F719DC2D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MerchantService.Test", "MerchantService.Test\MerchantService.Test.csproj", "{92717571-DA69-4C4C-9783-C037F0668321}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kExpense2.service.Usager", "kExpense2.service.Usager\kExpense2.service.Usager.csproj", "{4ADA4408-65B1-43BC-834A-F10D9618DE93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kExepnse2.service.Usager.Test", "kExepnse2.service.Usager.Test\kExepnse2.service.Usager.Test.csproj", "{F7D3DA14-4051-43B6-B1D8-A6EDF80941D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KDBTools", "KDBTools\KDBTools.csproj", "{FCF992BA-BF50-492A-BA85-C254AF437B3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +75,18 @@ Global
 		{92717571-DA69-4C4C-9783-C037F0668321}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92717571-DA69-4C4C-9783-C037F0668321}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92717571-DA69-4C4C-9783-C037F0668321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ADA4408-65B1-43BC-834A-F10D9618DE93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ADA4408-65B1-43BC-834A-F10D9618DE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ADA4408-65B1-43BC-834A-F10D9618DE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ADA4408-65B1-43BC-834A-F10D9618DE93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7D3DA14-4051-43B6-B1D8-A6EDF80941D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7D3DA14-4051-43B6-B1D8-A6EDF80941D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7D3DA14-4051-43B6-B1D8-A6EDF80941D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7D3DA14-4051-43B6-B1D8-A6EDF80941D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF992BA-BF50-492A-BA85-C254AF437B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF992BA-BF50-492A-BA85-C254AF437B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF992BA-BF50-492A-BA85-C254AF437B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF992BA-BF50-492A-BA85-C254AF437B3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
