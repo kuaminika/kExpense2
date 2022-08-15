@@ -13,6 +13,7 @@ namespace kExpense.Service.Income
         RecordedIncomeModel InsertIncome(IIncomeModel newIncome);
         int DeleteIncomeById(RecordedIncomeModel victim);
         RecordedSource AddSource(NewIncomeSource newSource);
+        RecordedIncomeModel UpdateIncome(RecordedIncomeModel income);
     }
 
 
@@ -21,11 +22,13 @@ namespace kExpense.Service.Income
         IIncomeRepository incomeRepository;
         IIncomeSourceRepository incomeSourceRepository;
         private IncomeServiceToolbox args;
+        Utils.IKLogTool logTool;
 
-        
+
         public IncomeService(IncomeServiceToolbox args)
         {
             this.args = args;
+            this.logTool = args.LogTool;
             incomeRepository = args.Repository;
             incomeSourceRepository = args.IncomeSourceRepo;
         }
@@ -48,9 +51,7 @@ namespace kExpense.Service.Income
 
         public RecordedSource AddSource(NewIncomeSource newSource)
         {
-            //TODO needs logging this whole class needs LOgging ... TCHUIP!!!
-
-
+            logTool.Log($"inside {GetType().Name}.AddSource");
 
             var result =   incomeSourceRepository.InsertIncomeSource(newSource);
             return result;
@@ -58,25 +59,29 @@ namespace kExpense.Service.Income
 
         public int DeleteIncomeById(RecordedIncomeModel victim)
         {
-          int affectedRows =   incomeRepository.DeleteIncomeById(victim);
+            logTool.Log($"inside {GetType().Name}.DeleteIncomeById");
+            int affectedRows =   incomeRepository.DeleteIncomeById(victim);
             return affectedRows;
         }
 
         public List<RecordedIncomeModel> FindIncomes()
         {
-           var result =  incomeRepository.FindIncomesLikeThis();
+            logTool.Log($"inside {GetType().Name}.FindIncomes");
+            var result =  incomeRepository.FindIncomesLikeThis();
             return result;
         }
 
         public List<IIncomeSourceModel> FindIncomeSources(IIncomeSourceModel source)
         {
+            logTool.Log($"inside {GetType().Name}.FindIncomeSources");
             List<IIncomeSourceModel> sourceList = incomeSourceRepository.FindSourcesLikeThis(source);
             return sourceList;
         }
 
         public RecordedIncomeModel InsertIncome(IIncomeModel newIncome)
         {
-           var sourceList = incomeSourceRepository.FindSourcesLikeThis(newIncome.Source);
+            logTool.Log($"inside {GetType().Name}.InsertIncome");
+            var sourceList = incomeSourceRepository.FindSourcesLikeThis(newIncome.Source);
             if (sourceList.Count == 0)
             {
                 newIncome.Source = incomeSourceRepository.InsertIncomeSource(newIncome.Source);
@@ -84,6 +89,25 @@ namespace kExpense.Service.Income
             else
                 newIncome.Source = sourceList[0] as RecordedSource;
             RecordedIncomeModel  result = incomeRepository.InsertIncome(newIncome);
+
+            return result;
+        }
+
+        public RecordedIncomeModel UpdateIncome(RecordedIncomeModel income)
+        {
+            logTool.Log($"inside {GetType().Name}.UpdateIncome");
+            logTool.Log($"before:{Newtonsoft.Json.JsonConvert.SerializeObject(income)}");
+            logTool.Log($"looking for:{Newtonsoft.Json.JsonConvert.SerializeObject(income.Source)}");
+            var sourceList = incomeSourceRepository.FindSourcesLikeThis(income.Source);
+            
+            if (sourceList.Count == 0)
+            {
+                logTool.Log("no source found");
+                income.Source = incomeSourceRepository.InsertIncomeSource(income.Source);
+            }
+            else
+                income.Source = sourceList[0] as RecordedSource;
+            RecordedIncomeModel result = incomeRepository.UpdateIncome(income);
 
             return result;
         }

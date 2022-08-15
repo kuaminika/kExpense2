@@ -4,6 +4,8 @@ using System.Globalization;
 
 namespace kExpense.Service.Income
 {
+
+
     public class RecordedIncomeModel : IIncomeModel
     {
         public int Id { get; set; }
@@ -18,14 +20,30 @@ namespace kExpense.Service.Income
             var result = new RecordedSource{ Id = SourceId, Name = SourceName, Email = SourceEmail, Phone="ghost", Address="ghost"};
             return result;
         }
-
+        public ProductModel Product { get => _product ?? ghostProduct(); set => _product = value; }
+        ProductModel _product;
+        private ProductModel ghostProduct() { return new ProductModel { Name = "ghost", Description = "ghost", OrgId = OrgId };  }
+        
         public int SourceId { get; internal set; }
         public string RawDate { get; internal set; }
         public string ProductName { get=>this.InvestmentName; set=>InvestmentName=value;  }
         public string SourceEmail {get;set;}
         public string SourceName {get;set;}
-        public string InvestmentName { get; set; } = "None";
-        public int ProductId{get;set;}
+        public string InvestmentName { 
+            get => Product.Name;
+            set { 
+                _product = _product ?? ghostProduct();
+                _product.Name = value;
+            } } 
+        public int ProductId
+        {
+            get => Product.Id;
+            set
+            {
+                _product = _product ?? ghostProduct();
+                _product.Id = value;
+            }
+        }
 
         private DateTime strToDate(string str)
         {
@@ -39,7 +57,7 @@ namespace kExpense.Service.Income
 
         }
 
-        internal static RecordedIncomeModel Copy(IIncomeModel incomeModel)
+        public static RecordedIncomeModel Copy(IIncomeModel incomeModel)
         {
 
             var rslt = new RecordedIncomeModel();
@@ -47,6 +65,7 @@ namespace kExpense.Service.Income
             rslt.BriefDescription = incomeModel.BriefDescription;
             rslt.Source = incomeModel.Source;
             rslt.OrgId = incomeModel.OrgId;
+            rslt.Product = incomeModel.Product;
             rslt.Amount = incomeModel.Amount;
            
             return rslt;

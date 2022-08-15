@@ -1,4 +1,5 @@
 ﻿using kExpense.Service.Income.Source;
+using kExpense.Service.Income.Utils;
 
 namespace kExpense.Service.Income
 {
@@ -6,6 +7,7 @@ namespace kExpense.Service.Income
     {
         public IIncomeSourceRepository IncomeSourceRepo { get; set; }
         public IIncomeRepository Repository { get; set; }
+        public IKLogTool LogTool { get; internal set; }
     }
 
     public abstract class IncomeServiceFactory_A

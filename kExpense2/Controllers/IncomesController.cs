@@ -36,6 +36,9 @@ namespace kExpense2.Controllers
             }
         }
 
+
+
+
         [HttpPost]
         [Route("AddSource")]
         public RecordedSource AddSource(NewIncomeSource newSource)
@@ -72,6 +75,15 @@ namespace kExpense2.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("Update")]
+        public RecordedIncomeModel UpdateIncome(RecordedIncomeModel income)
+        {
+            string output = JsonConvert.SerializeObject(income);
+            Console.Out.WriteLine(output);
+            var result = service.UpdateIncome(income);
+            return result;
+        }
 
         [HttpPost]
         public RecordedIncomeModel AddIncome(NewIncomeModel newIncome)

@@ -17,7 +17,7 @@ namespace kExpense2.service.Usager
                 FROM houseofm_kExpense_DEV.kOrgnProduct p
                 WHERE (p.id = {m.Id} or (p.id <> {m.Id} and 0={m.Id}))
                 AND (p.`name` = '{m.Name}' or (p.`name`<>'{m.Name}' and ''='{m.Name}'))
-                AND (p.`description`= '{m.Description}' or (p.`description`<>''{m.Description}'' and ''='{m.Description}'))
+                AND (ifnull(p.`description`,'') = '{m.Description}' or (ifnull(p.`description`,'')<>'{m.Description}' and  ''='{m.Description}'))
                 AND (p.kOrgn_id = {m.OrgId} or (p.kOrgn_id <>{m.OrgId} and 0 ={m.OrgId} ))";
 
             return queryStr;

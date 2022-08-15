@@ -13,5 +13,7 @@ namespace kExpense.Service.Income
         decimal Amount { get; set; }
         string ProductName {get;set;}
         RecordedSource Source { get; set; }
+
+        ProductModel Product { get; set; }
     }
 }

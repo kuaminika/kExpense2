@@ -19,8 +19,8 @@ namespace kExpense.Service.Income.Test
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false).Build();
 
             IKonfig konfig = new Konfigs(config);
-            IncomeSourceRepoFactory_A f = new IncomeSourceRepoFactory(new IncomeSourceRepositoryToolBox { DataGateway = new DataGateway(konfig.ConnectionString), QueryHolder = new IncomeSourceQueries() });
-            IncomeRepositoryToolBox toolbox = new IncomeRepositoryToolBox { DataGateway = new DataGateway(konfig.ConnectionString) };
+            IncomeSourceRepoFactory_A f = new IncomeSourceRepoFactory(new IncomeSourceRepositoryToolBox { DataGateway = new DataGateway(konfig.ConnectionString), LogTool= new DefaultLogger(), QueryHolder = new IncomeSourceQueries() });
+            IncomeRepositoryToolBox toolbox = new IncomeRepositoryToolBox { DataGateway = new DataGateway(konfig.ConnectionString), LogTool = new DefaultLogger() };
             toolbox.OrgId = konfig.GetIntValue("orgId");
             toolbox.QueryHolder = new IncomeQueries();
             IncomeRepositoryFactory_A ff = new IncomeRepositoryFactory(toolbox);
@@ -31,7 +31,7 @@ namespace kExpense.Service.Income.Test
         [Test]
         public void TestInsertingIncome()
         {
-            IIncomeModel newIncome = new NewIncomeModel { IncomeDate = DateTime.Now, BriefDescription = "they gave it", Amount = 10, ProductName = "Utwagwan", OrgId = 2 };
+            IIncomeModel newIncome = new NewIncomeModel { IncomeDate = DateTime.Now, BriefDescription = "they gave it", Amount = 10, ProductName = "Utwagan Emir", OrgId = 2 };
             var sourceList = incomeSourceRepo.FindSourcesLikeThis();
             List<RecordedIncomeModel> list = repository.FindIncomesLikeThis();
             int buffer = 10;
@@ -60,6 +60,8 @@ namespace kExpense.Service.Income.Test
 
             Assert.Greater(after, beforeAmount);
         }
+
+       
 
     }
 

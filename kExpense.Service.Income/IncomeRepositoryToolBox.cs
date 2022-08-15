@@ -9,5 +9,6 @@ namespace kExpense.Service.Income
         public IIncomeQueries QueryHolder { get; set; }
         public IDataGateway DataGateway { get; set; }
         public int OrgId { get;  set; }
+        public DefaultLogger LogTool { get; set; }
     }
 }

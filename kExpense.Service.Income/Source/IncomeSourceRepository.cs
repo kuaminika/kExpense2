@@ -9,10 +9,12 @@ namespace kExpense.Service.Income.Source
     {
         private IIncomeSourceQueries queryHolder;
         private IDataGateway dataGateway;
+        private IKLogTool logTool;
         public IncomeSourceRepository(IncomeSourceRepositoryToolBox toolbox)
         {
             dataGateway = toolbox.DataGateway;
             queryHolder = toolbox.QueryHolder;
+            logTool = toolbox.LogTool;
         }
 
         public RecordedSource FindSourceLikeThis(IIncomeSourceModel potentialKnownSource)
@@ -76,6 +78,8 @@ namespace kExpense.Service.Income.Source
             IIncomeSourceModel tmp = tmmp ??new NewIncomeSource { Address = "", Email = "", Name = "", Phone = "" };
             var args = getDynamicParameters(tmp);
             string query =  queryHolder.FindSourcesLikeThis(args);
+            logTool.Log($"Inside {GetType().Name}.FindSourcesLikeThis");
+            logTool.Log(query);
             List<RecordedSource> recordedSources = dataGateway.ExecuteReadManyResult<RecordedSource>(query);
 
             List<IIncomeSourceModel> result = new List<IIncomeSourceModel>();

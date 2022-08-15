@@ -10,13 +10,14 @@ namespace kExpense.Service.Income.Utils
 
          
             IKonfig konfig = new Konfigs(config);
-            IncomeSourceRepoFactory_A f = new IncomeSourceRepoFactory(new IncomeSourceRepositoryToolBox { DataGateway = new DataGateway(konfig.ConnectionString), QueryHolder = new IncomeSourceQueries() });
+            IncomeSourceRepoFactory_A f = new IncomeSourceRepoFactory(new IncomeSourceRepositoryToolBox {LogTool= new DefaultLogger(), DataGateway = new DataGateway(konfig.ConnectionString), QueryHolder = new IncomeSourceQueries() });
             IncomeRepositoryToolBox toolbox = new IncomeRepositoryToolBox { DataGateway = new DataGateway(konfig.ConnectionString) };
+            toolbox.LogTool = new DefaultLogger();
             toolbox.OrgId = konfig.GetIntValue("orgId");
             toolbox.QueryHolder = new IncomeQueries();
             IncomeRepositoryFactory_A ff = new IncomeRepositoryFactory(toolbox);
              IncomeServiceToolbox args = new Income.IncomeServiceToolbox();
-
+            args.LogTool = new DefaultLogger();
             args.IncomeSourceRepo = f.Create();
             args.Repository = ff.Create();
             IncomeServiceFactory_A factory = new IncomeServiceFactory(args);

@@ -7,6 +7,6 @@ namespace kExpense.Service.Income.Source
 
         public IDataGateway DataGateway { get; set; }
         public IIncomeSourceQueries QueryHolder { get; set; }
-
+        public IKLogTool LogTool { get;  set; }
     }
 }

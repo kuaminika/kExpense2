@@ -11,6 +11,7 @@ namespace kExpense.Service.Income
         RecordedIncomeModel InsertIncome(IIncomeModel incomeModel);
         List<RecordedIncomeModel> FindIncomesLikeThis(IIncomeModel q = null);
         int DeleteIncomeById(RecordedIncomeModel victim);
+        RecordedIncomeModel UpdateIncome(RecordedIncomeModel income);
     }
 
 
@@ -19,12 +20,15 @@ namespace kExpense.Service.Income
         IIncomeQueries incomeQueries;
         IDataGateway dataGateway;
         int orgId;
-        
+        private IKLogTool logTool;
+
         public IncomeRepository(IncomeRepositoryToolBox toolBox)
         {
             dataGateway = toolBox.DataGateway;
             orgId = toolBox.OrgId;
+            this.logTool = toolBox.LogTool;
             incomeQueries = toolBox.QueryHolder;
+            
         }
 
         public List<RecordedIncomeModel> FindIncomesLikeThis(IIncomeModel q = null)
@@ -64,8 +68,9 @@ namespace kExpense.Service.Income
              //TODO: need to thing of scenario when reason not found
             try
             {
-                string productSearchQuery = string.Format("SELECT id from kOrgnProduct p where p.name='{0}'", incomeModel.ProductName);
+                string productSearchQuery = string.Format("SELECT id from kOrgnProduct p where p.name='{0}'", incomeModel.Product.Name);
                 int rslt =0;
+                Console.WriteLine(productSearchQuery);
                 dataGateway.ExecuteScalar(productSearchQuery,new KDBAbstractions.AllMapper(reader=>{
                     if (!reader.Read()||!reader.YieldedResults) return ;
                     rslt = reader.GetInt("id");
@@ -77,24 +82,46 @@ namespace kExpense.Service.Income
                return 0;
             }// todo: need to log  error 
         }
-
         public RecordedIncomeModel InsertIncome(IIncomeModel incomeModel)
         {
             RecordedIncomeModel result = RecordedIncomeModel.Copy(incomeModel);
             result.SourceId = (incomeModel.Source as RecordedSource).Id;
             result.ProductId = getProductId(incomeModel);
-            DynamicParameters parameters = findDynamicParams(result);     
+
+            Console.Out.WriteLine($"resul.productID:{result.ProductId}");
+            DynamicParameters parameters = findDynamicParams(result);
             string query = incomeQueries.InsertQuery(parameters);
-            var outcome = dataGateway.ExecuteInsert(query);          
+            Console.Out.WriteLine($"resul.productID:{query}");
+
+
+            var outcome = dataGateway.ExecuteInsert(query);
             result.Id = (int)outcome.LastInsertedId;
             return result;
         }
 
+        public RecordedIncomeModel UpdateIncome(RecordedIncomeModel incomeModel)
+        {
+            logTool.Log($"inside {GetType().Name}.UpdateIncome");
+            string serialized =  Newtonsoft.Json.JsonConvert.SerializeObject(incomeModel);
+            logTool.Log($"income:{serialized}");
+            logTool.Log($"income's product:{Newtonsoft.Json.JsonConvert.SerializeObject(incomeModel.Product)}");
+
+            DynamicParameters parameters = findDynamicParams(incomeModel);
+            string query = incomeQueries.UpdateQuery(parameters);
+            logTool.Log($"update query :{query}");
+           var outcome =  dataGateway.Execute(query);
+            if (outcome.AffectedRowCount == 0) throw new Exception($"Nothing was updated for {serialized} ");
+            RecordedIncomeModel result = this.FindIncomesLikeThis(incomeModel)[0];
+            return result;
+        }
         public int DeleteIncomeById(RecordedIncomeModel victim)
         {
+            logTool.Log($"inside {GetType().Name}.UpdateIncome");
+            logTool.Log($"before:{Newtonsoft.Json.JsonConvert.SerializeObject(victim)}");
+
             DynamicParameters parameters = findDynamicParams(victim);
            string query = incomeQueries.DeleteIncome(parameters);
-            Console.Out.WriteLine(query);
+            logTool.Log(query);
 
             var outcome =      dataGateway.Execute(query);
 

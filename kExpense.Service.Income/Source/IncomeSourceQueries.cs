@@ -15,8 +15,9 @@ namespace kExpense.Service.Income.Source
             return result;
         }
 
-        public string FindSourceLikeThis<T>(T m)
+        public string FindSourceLikeThis<T>(T m,bool ignorePhoneAndAddress = true)
         {
+            string ign = ignorePhoneAndAddress ? "ign" : "";
             DynamicParameters parameters = m as DynamicParameters;
             string name = parameters.Get<string>("Name");
             string email = parameters.Get<string>("Email");
@@ -31,8 +32,8 @@ namespace kExpense.Service.Income.Source
                          inner join `kOrgnDesc` d on f.`desc.id` = d.id
                               where  (d.`email` = '{email}' or (d.`email` <> '{email}' and '{email}' =''  ))           
                                 and  (d.`name` = '{name}' or (d.`name`<>'{name}' and '{name}'=''))      
-                                and  (d.`phone` = '{phone}' or (d.`name`<>'{phone}' and '{phone}'=''))      
-                                and  (d.`address` = '{address}' or (d.`name`<>'{address}' and '{address}'=''))
+                                and  (d.`phone` = '{phone}' or (d.`name`<>'{phone}' and '{phone}'='' or ('ign'='{ign}')))      
+                                and  (d.`address` = '{address}' or (d.`name`<>'{address}' and '{address}'=''or ('ign'='{ign}')))
                         ";
             return result;
 

@@ -10,13 +10,13 @@ namespace kExpense.Service.Income.Test
     {
         IIncomeSourceRepository repository;
         [SetUp]
-        public void Setup()
+        public void Setup() 
         {
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false).Build();
 
             IKonfig konfig = new Konfigs(config);
 
-            IncomeSourceRepoFactory_A f = new IncomeSourceRepoFactory(new IncomeSourceRepositoryToolBox { DataGateway = new DataGateway(konfig.ConnectionString), QueryHolder = new IncomeSourceQueries() });
+            IncomeSourceRepoFactory_A f = new IncomeSourceRepoFactory(new IncomeSourceRepositoryToolBox {LogTool=new DefaultLogger(), DataGateway = new DataGateway(konfig.ConnectionString), QueryHolder = new IncomeSourceQueries() });
 
             repository = f.Create();
         }

@@ -7,6 +7,7 @@ namespace kExpense.Service.Income
         string FindIncomesLikeThis<T>(T m);
         string InsertQuery<T>(T m);
         string DeleteIncome<T>(T m);
+        string UpdateQuery<T>(T m);
     }
     public class IncomeQueries : IIncomeQueries
     {
@@ -56,6 +57,23 @@ namespace kExpense.Service.Income
             string result = $@"insert into `kIncome` (`reason`,`amount`,`transactionDate`,`kThirdPartyOrgnid`,`kOrgnid`,`kProductId`) 
                                         values('{queryObj.BriefDescription}',{queryObj.Amount},{queryObj.RawDate},{queryObj.SourceId},{queryObj.OrgId},{queryObj.ProductId})";
             return result;
+        }
+
+        public string UpdateQuery<T>(T m)
+        {
+            RecordedIncomeModel queryObj = getRecordedModel(m);
+
+            string update = $@"UPDATE kIncome set `reason`= '{queryObj.BriefDescription}',
+                                                  `amount`= {queryObj.Amount},
+                                         `transactionDate`= '{queryObj.RawDate}',
+                                       `kThirdPartyOrgnid`= {queryObj.SourceId},
+                                                 `kOrgnid`=  {queryObj.OrgId},
+                                              `kProductId`= {queryObj.ProductId}
+                            WHERE Id ={queryObj.Id}; ";
+
+            return update;
+
+
         }
 
         private RecordedIncomeModel getRecordedModel<T>(T m)

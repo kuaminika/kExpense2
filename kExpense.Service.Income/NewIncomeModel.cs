@@ -10,9 +10,15 @@ namespace kExpense.Service.Income
         public int OrgId { get; set; }
         public DateTime IncomeDate { get; set; }
         public string BriefDescription { get; set; }
-        public string ProductName { get; set; }
+        public string ProductName { get => Product.Name; set => Product.Name = value; }
         public decimal Amount { get; set; }
         public RecordedSource Source { get; set; }
+        public ProductModel Product { get { product = product ?? new ProductModel(); return product; } set => product = value; }
+
+
+        private ProductModel product ;
+
+
     }
 
 
