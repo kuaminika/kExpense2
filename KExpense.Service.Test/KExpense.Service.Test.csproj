@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KDBTools\KDBTools.csproj" />
     <ProjectReference Include="..\KExpense.Repository\KExpense.Repository.csproj" />
     <ProjectReference Include="..\KExpense.Service\KExpense.Service.csproj" />
     <ProjectReference Include="..\kExpense2\kExpense2.csproj" />

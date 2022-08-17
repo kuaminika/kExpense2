@@ -7,5 +7,6 @@ namespace KDBTools.interfaces
     public interface IKLogTool
     {
          void Log(string msg);
+        void LogObj<T>(T obj);
     }
 }

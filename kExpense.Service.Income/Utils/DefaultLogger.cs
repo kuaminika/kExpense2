@@ -10,5 +10,12 @@ namespace kExpense.Service.Income.Utils
         {
            Console.Out.WriteLine($"{DateTime.Now}->{msg}");
         }
+
+        public void logObject<T>(T list)
+        {
+           string msg =    Newtonsoft.Json.JsonConvert.SerializeObject(list, Newtonsoft.Json.Formatting.Indented);
+
+            Console.Out.WriteLine($"{DateTime.Now}->{msg}");
+        }
     }
 }

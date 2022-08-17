@@ -12,6 +12,7 @@ namespace kExpense.Service.Income
         List<RecordedIncomeModel> FindIncomesLikeThis(IIncomeModel q = null);
         int DeleteIncomeById(RecordedIncomeModel victim);
         RecordedIncomeModel UpdateIncome(RecordedIncomeModel income);
+        List<RecordedIncomeModel> GetIncomesForMonth(int year, int month, int usagerId);
     }
 
 
@@ -126,6 +127,20 @@ namespace kExpense.Service.Income
             var outcome =      dataGateway.Execute(query);
 
             return outcome.AffectedRowCount;
+        }
+
+        public List<RecordedIncomeModel> GetIncomesForMonth(int year, int month, int usagerId)
+        {
+            logTool.Log($"inside {GetType().Name}.GetIncomesForMonth");
+            logTool.Log($"year:{year},month:{month},usagerId,{usagerId}");
+
+
+            string query = incomeQueries.GetIncomesForMonth(year, month, usagerId);
+
+            logTool.Log(query);
+            List<RecordedIncomeModel> recordeds = dataGateway.ExecuteReadManyResult<RecordedIncomeModel>(query);
+            return recordeds;
+
         }
     }
 }

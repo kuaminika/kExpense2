@@ -8,6 +8,7 @@ namespace kExpense.Service.Income
         string InsertQuery<T>(T m);
         string DeleteIncome<T>(T m);
         string UpdateQuery<T>(T m);
+        string GetIncomesForMonth(int year, int month, int usagerId);
     }
     public class IncomeQueries : IIncomeQueries
     {
@@ -48,6 +49,31 @@ namespace kExpense.Service.Income
 
             return result;           
 
+        }
+
+        public string GetIncomesForMonth(int year, int month, int usagerId)
+        {
+            string date = $"{year}{month.ToString().PadLeft(2,'0')}%";
+          string result =   $@"SELECT i.id                   `Id`
+                                    , i.reason               `BriefDescription`
+                                    , i.amount               `Amount`
+                                    , i.transactionDate      `RawDate` 
+                                    , p.id                   `SourceId`
+                                    , p.email_denormed       `SourceEmail`
+                                    , p.name_denormed        `SourceName`
+                                    , ifnull(pr.`name`,'')   `InvestmentName`
+                                    , i.kOrgnid              `OrgId`
+                                    , ifnull(pr.id,0)	     `ProductId`
+                              FROM `kIncome` i 
+                        INNER JOIN `kForeignIncomePartyOrgn` p on i.kThirdPartyOrgnid = p.id
+                         LEFT JOIN `kOrgnProduct` pr on pr.id = i.kProductId
+                             WHERE ( i.transactionDate like '{date}')
+                               and ( pr.id = {usagerId})
+                               and ( i.deletedTimne is null)
+                          ORDER BY i.id DESC     ;";
+
+
+            return result;
         }
 
         public string InsertQuery<T>(T m)

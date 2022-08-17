@@ -14,6 +14,7 @@ namespace kExpense.Service.Income
         int DeleteIncomeById(RecordedIncomeModel victim);
         RecordedSource AddSource(NewIncomeSource newSource);
         RecordedIncomeModel UpdateIncome(RecordedIncomeModel income);
+        List<RecordedIncomeModel> GetIncomesForMonth(int year, int month, int usagerId);
     }
 
 
@@ -70,6 +71,14 @@ namespace kExpense.Service.Income
             var result =  incomeRepository.FindIncomesLikeThis();
             return result;
         }
+
+        public List<RecordedIncomeModel> GetIncomesForMonth(int year, int month, int usagerId)
+        {
+            logTool.Log($"inside {GetType().Name}.GetIncomesForMonth");
+            List<RecordedIncomeModel> result = incomeRepository.GetIncomesForMonth(year,month,usagerId);
+            return result;
+        }
+
 
         public List<IIncomeSourceModel> FindIncomeSources(IIncomeSourceModel source)
         {

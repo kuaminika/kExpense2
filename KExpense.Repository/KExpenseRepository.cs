@@ -8,14 +8,22 @@ using System.Text;
 
 namespace KExpense.Repository
 {
+    public struct KExpenseRepoArgs
+    {
+        public int OrgId { get;   set; }
+        public AKDBAbstraction DbAbstraction { get;   set; }
+        public IKLogTool LogTool { get;  set; }
+    }
     public class KExpenseRepository:IKExpenseRepository
     {
         private readonly  AKDBAbstraction dbAbstraction;
+        private IKLogTool logTool;
         public int OrgId { get; set; } = 0;
-        public KExpenseRepository(int orgId,AKDBAbstraction db)
+        public KExpenseRepository(KExpenseRepoArgs args)
         {
-            this.OrgId = orgId;
-            this.dbAbstraction = db;
+            this.OrgId = args.OrgId;
+            this.dbAbstraction = args.DbAbstraction;
+            this.logTool = args.LogTool;
         }
 
         private DateTime strToDate(string str)
@@ -162,7 +170,19 @@ namespace KExpense.Repository
                     result.Add(p);
                 }
             });
-            dbAbstraction.ExecuteReadSPTranasaction("getExpensesForProduct", parameters, mapper);
+            string allExpenses = $@" SELECT * 
+                                     FROM kExpense e 
+                               inner join  kForeignPartyOrgn o on e.kThirdPartyOrgn_id = o.id
+                               inner join  kOrgnProduct p on p.id = e.kOrgnProduct_id
+                                    where e.transactionDate 
+                                     like '{year}{month.ToString().PadLeft(2,'0')}%' and e.kOrgnProduct_id = {product_id} ";
+
+         //   allExpenses += org_id == 0 ? string.Empty : string.Format(" where korgn_id={0}", OrgId);
+            allExpenses += "order by e." + "id" + " desc";
+
+            this.logTool.Log(allExpenses);
+            dbAbstraction.ExecuteReadTransaction(allExpenses,mapper);
+            // dbAbstraction.ExecuteReadSPTranasaction("getExpensesForProduct", parameters, mapper);
 
             return result;
         }

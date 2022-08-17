@@ -75,6 +75,23 @@ namespace kExpense2.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetIncomesForMonth/{year}/{month}/{usagerId}")]
+        public List<RecordedIncomeModel> GetIncomesForMonth(int year, int month, int usagerId)
+        {
+            try 
+            {
+
+                var result = service.GetIncomesForMonth(year,month,usagerId);
+                return result;
+            
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost]
         [Route("Update")]
         public RecordedIncomeModel UpdateIncome(RecordedIncomeModel income)

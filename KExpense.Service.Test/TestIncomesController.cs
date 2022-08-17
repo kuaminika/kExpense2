@@ -1,6 +1,5 @@
 ﻿using kExpense.Service.Income;
 using kExpense.Service.Income.Source;
-using kExpense.Service.Income.Utils;
 using kExpense2.Controllers;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
@@ -9,8 +8,10 @@ using System.Collections.Generic;
 
 namespace KExpense.Service.Test
 {
+
     public class TestIncomesController
     {
+        
         IncomesController specimen; 
         [SetUp]
         public void SetUp()
@@ -30,6 +31,26 @@ namespace KExpense.Service.Test
         }
 
         [Test]
+        public void TestFetchingIncomesForMonthFromController()
+        {
+            int month = DateTime.Now.Month;
+            int usagerId = 2;
+            int year = 2022;
+
+            List<RecordedIncomeModel> lists = specimen.GetIncomes();
+            int beforeAmount = lists.Count;
+            var newEx = new NewIncomeModel { IncomeDate = DateTime.Now, BriefDescription = $"from controller {beforeAmount}", Amount = 10 * beforeAmount, ProductName = "Utwagan Emir", OrgId = 2 };
+         
+            specimen.AddIncome(newEx);
+
+            List<RecordedIncomeModel> list = specimen.GetIncomesForMonth(year, month, usagerId);
+            Console.Out.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(list, Newtonsoft.Json.Formatting.Indented));
+            Assert.IsNotNull(list);
+            Assert.IsTrue(list.Count > 0);
+        }
+
+
+        [Test]
         public void TestAddingIncomeFromController()
         {
 
@@ -45,6 +66,7 @@ namespace KExpense.Service.Test
             int after = list.Count;
             Assert.Greater(after, beforeAmount);
         }
+
         [Test]
         public void TestUpdatingIncomeFromController()
         {

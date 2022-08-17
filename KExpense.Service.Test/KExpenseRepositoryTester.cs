@@ -6,20 +6,21 @@ using NUnit.Framework;
 namespace KExpense.Service.Test
 {
 
-    public class Tests
+    public class KExpenseRepositoryTester
     {
         AKDBAbstraction db;
-        int orgId;
+        int orgId; IKExpenseRepository ker;
          [SetUp]
         public void Setup()
         {
             var builder = new ConfigurationBuilder();
             IConfigurationBuilder ibuilder  = builder.AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: true);
             IConfiguration config = ibuilder.Build();
-      //      IConfiguration config = new ConfigurationBuilder().AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false).Build();
+            //      IConfiguration config = new ConfigurationBuilder().AddJsonFile("kExpenseConfig.json", optional: false, reloadOnChange: false).Build();
             string connString = config["connectionString_test"].ToString();
              orgId = 2;
             db = new KMysql_KDBAbstraction(connString);
+            ker = new KExpenseRepository(new KExpenseRepoArgs { OrgId=orgId, DbAbstraction = db, LogTool = new ConsoleLogger() });
         }
 
         [Test]
@@ -32,16 +33,14 @@ namespace KExpense.Service.Test
 
         [Test]
         public void TestGettingExpenses()
-        {
-            IKExpenseRepository ker = new KExpenseRepository(orgId,db);
+        { 
             var r = ker.GetAllKExpenses();
             Assert.IsTrue(r.Count > 0);
         }
 
         [Test]
         public void TestDeletingExpense()
-        {
-            IKExpenseRepository ker = new KExpenseRepository(orgId, db); 
+        { 
             var r = ker.GetAllKExpenses();
             int countBefore = r.Count;
             //adding first
@@ -66,8 +65,7 @@ namespace KExpense.Service.Test
 
         [Test]
         public void TestUpdateFirstExpense()
-        {
-            IKExpenseRepository ker = new KExpenseRepository(orgId, db);
+        { 
             var r = ker.GetAllKExpenses();
             IKExpense first = r[0];
             IKExpense initial = new ExpenseModel { MerchantName = first.MerchantName,Cost= first.Cost};
@@ -85,8 +83,7 @@ namespace KExpense.Service.Test
 
         [Test]
         public void TestDeletingExpenseById()
-        {
-            IKExpenseRepository ker = new KExpenseRepository(orgId, db);
+        { 
             var r = ker.GetAllKExpenses();
             int countBefore = r.Count;
             //adding first
@@ -115,8 +112,7 @@ namespace KExpense.Service.Test
         public void TestAddingExpense()
         {
             //CALL `houseofm_kExpense`.`record_expense`(<{IN for_produc_id int}>, <{IN expense_year int}>, <{IN expense_month int}>, <{IN expense_day int}>, <{IN cost decimal(10,2)}>, <{IN reason varchar(500)}>, <{IN merchant_id int}>, <{IN spending_org_id int}>);
-
-            IKExpenseRepository ker = new KExpenseRepository(orgId,db);
+             
             var r = ker.GetAllKExpenses();
             int countBefore = r.Count;
 

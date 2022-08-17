@@ -40,5 +40,14 @@ namespace KDBTools
 
             Console.Out.WriteLine(fullMsg);
         }
+
+        public void LogObj<T>(T obj)
+        {
+          string msg =   Newtonsoft.Json.JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented);
+            string fullMsg = $"{DateTime.Now}: {msg}";
+
+            Console.Out.WriteLine(fullMsg);
+        }
+     
     }
 }

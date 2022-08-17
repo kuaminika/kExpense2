@@ -41,6 +41,21 @@ namespace kExpense2.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetExpensesForMonth/{year}/{month}/{usagerId}")]
+        public List<IKExpense> GetExpensesForMonth(int year, int month, int usagerId)
+        {
+            try
+            {
+                List<IKExpense> result = toolBox.service.GetAllForMonth(year,month,usagerId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost]        
         public IKExpense Post( ExpenseModel newExpense)
         {
