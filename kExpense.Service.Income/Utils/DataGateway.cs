@@ -1,9 +1,9 @@
-﻿using KDBAbstractions.Repository;
-using KDBAbstractions.Repository.interfaces;
-using MySql.Data.MySqlClient;
-using Dapper;
-using System.Collections.Generic;
+﻿using Dapper;
+using KDBTools.Repository;
+using KDBTools.Repository.interfaces;
+using MySqlConnector;
 using System;
+using System.Collections.Generic;
 
 namespace kExpense.Service.Income.Utils
 {

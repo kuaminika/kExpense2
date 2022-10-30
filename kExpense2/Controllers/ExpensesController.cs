@@ -36,6 +36,7 @@ namespace kExpense2.Controllers
             {
                 List<IKExpense> result = new List<IKExpense>();
                 var error = ErrorModels.ErrorExpenseCreator.get().CreateFromException(ex);
+                error.BriefDescription+="--->"+_config.connectionString;
                 result.Add(error);
                 return result;
             }

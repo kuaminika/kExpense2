@@ -1,5 +1,5 @@
-﻿using KDBAbstractions.Repository;
-using KDBAbstractions.Repository.interfaces;
+﻿using KDBTools.Repository;
+using KDBTools.Repository.interfaces;
 using MerchantService.Models;
 using System;
 using System.Collections.Generic;

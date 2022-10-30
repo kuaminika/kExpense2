@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using KDBAbstractions.Repository.interfaces;
+using KDBTools.Repository.interfaces;
 using kExpense.Service.Income.Utils;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace kExpense.Service.Income.Source
     public class IncomeSourceRepository : IIncomeSourceRepository
     {
         private IIncomeSourceQueries queryHolder;
-        private IDataGateway dataGateway;
+        private Utils.IDataGateway dataGateway;
         private IKLogTool logTool;
         public IncomeSourceRepository(IncomeSourceRepositoryToolBox toolbox)
         {

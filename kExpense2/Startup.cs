@@ -17,44 +17,45 @@ namespace kExpense2
 {
     public partial class Startup
     {
+        private string MyAllowSpecificOrigins;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+             MyAllowSpecificOrigins = "_myAllowSpecificOrigins"; 
         }
-        private string coorsPolicyName = "kCoorsPolicy";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-           // services.AddSingleton(typeof(IIncomeService));
-              
+        { 
             services.AddCors(options =>
-             {
-                 options.AddPolicy(coorsPolicyName,
-                 builder =>
-                 {
-                     //allowedOringins came from the kExpenseConfig.json
-                     string[] allowedOrigins = Configuration["allowedOringins"].Split(',');
-                     builder.WithOrigins(allowedOrigins)
-                     .AllowAnyHeader()                      
-                     .AllowAnyMethod();
-                 });
+             { options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder =>
+                      {     Console.Out.WriteLine($"allowedOrgigins {Configuration["allowedOringins"]}"); 
+                         string[] allowedOrigins = Configuration["allowedOringins"].Split(',');
+                           builder.WithOrigins(allowedOrigins )
+                         .AllowAnyHeader()     
+                    
+                         .AllowAnyMethod();
+                      }); 
              });
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        { 
+        {
+
+            Console.Out.WriteLine($"IsDevelopment: {env.IsDevelopment().ToString()}");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             } 
             app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor});
             app.UseDeveloperExceptionPage();
-            app.UseHttpsRedirection();
-            app.UseCors(coorsPolicyName);
+            //if(!env.IsDevelopment())
+           // app.UseHttpsRedirection();
+            app.UseCors("_myAllowSpecificOrigins");
             app.UseRouting();
             app.UseAuthorization(); 
             app.UseEndpoints(endpoints =>

@@ -10,8 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KDBAbstractions" Version="1.0.6" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
+    <ProjectReference Include="..\KDBTools\KDBTools.csproj" />
   </ItemGroup>
 
 </Project>

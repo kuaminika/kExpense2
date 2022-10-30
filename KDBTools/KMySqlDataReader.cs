@@ -1,5 +1,6 @@
 ﻿using KDBTools.Repository.interfaces;
-using MySql.Data.MySqlClient;
+
+using MySqlConnector;
 
 namespace KDBTools.Repository
 {

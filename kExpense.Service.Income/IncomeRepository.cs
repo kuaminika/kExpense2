@@ -72,7 +72,7 @@ namespace kExpense.Service.Income
                 string productSearchQuery = string.Format("SELECT id from kOrgnProduct p where p.name='{0}'", incomeModel.Product.Name);
                 int rslt =0;
                 Console.WriteLine(productSearchQuery);
-                dataGateway.ExecuteScalar(productSearchQuery,new KDBAbstractions.AllMapper(reader=>{
+                dataGateway.ExecuteScalar(productSearchQuery,new KDBTools.AllMapper(reader=>{
                     if (!reader.Read()||!reader.YieldedResults) return ;
                     rslt = reader.GetInt("id");
                 }));

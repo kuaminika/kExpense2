@@ -1,9 +1,9 @@
-﻿using KDBAbstractions.Repository.interfaces;
+﻿using KDBTools.Repository.interfaces;
 using System;
 using System.Collections.Generic;
-using KDBAbstractions;
+using KDBTools;
 using MerchantService.Models;
-using KDBAbstractions.Repository;
+using KDBTools.Repository;
 
 namespace MerchantService
 {

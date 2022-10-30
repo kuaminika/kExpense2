@@ -22,11 +22,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="nunit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KDBTools\KDBTools.csproj" />
     <ProjectReference Include="..\KExpense.Repository\KExpense.Repository.csproj" />
     <ProjectReference Include="..\KExpense.Service\KExpense.Service.csproj" />
     <ProjectReference Include="..\kExpense2\kExpense2.csproj" />

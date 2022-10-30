@@ -26,9 +26,11 @@ namespace kExpense2
                     logging.AddConsole();// this says that you're adding a Consolelogger
 
                 })
-                .ConfigureWebHostDefaults(webBuilder =>
+               .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    Console.Out.WriteLine("programs:"+webBuilder.GetSetting("allowedOringins"));
+                    webBuilder.UseUrls("http://localhost:5003");
                 });
     }
 }
